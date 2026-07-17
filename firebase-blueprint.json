@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "character": {
+      "title": "Character",
+      "description": "Character sheet data for Percival and other characters",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The character's name"
+        },
+        "class": {
+          "type": "string",
+          "description": "The character's class"
+        },
+        "level": {
+          "type": "integer",
+          "description": "The character's level"
+        },
+        "hp": {
+          "type": "object",
+          "description": "Hit points info"
+        },
+        "ac": {
+          "type": "integer",
+          "description": "Armor class"
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Character attributes"
+        },
+        "layOnHands": {
+          "type": "object",
+          "description": "Lay on Hands tracking"
+        },
+        "divineSense": {
+          "type": "object",
+          "description": "Divine Sense tracking"
+        },
+        "spellSlots": {
+          "type": "object",
+          "description": "Spell slots tracking"
+        },
+        "spells": {
+          "type": "array",
+          "description": "List of Spells"
+        },
+        "inventory": {
+          "type": "array",
+          "description": "Items in inventory"
+        },
+        "coins": {
+          "type": "object",
+          "description": "Current coinage"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "class", "level", "hp", "ac"]
+    }
+  },
+  "firestore": {
+    "/characters/{characterId}": {
+      "schema": "character",
+      "description": "Single character sheet collection"
+    }
+  }
+}

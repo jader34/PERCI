@@ -1,0 +1,116 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cinzel", Georgia, serif;
+  --font-mono: "Fira Code", monospace;
+
+  /* Frosted Glass visual palette with translucent gold, blood crimson and glass tones */
+  --color-fantasy-gold: #f59e0b; /* Amber 500 gold representation */
+  --color-fantasy-gold-light: #fcd34d; /* Amber 300 representation */
+  --color-fantasy-crimson: #990000; /* Deep luxury blood-red */
+  --color-fantasy-crimson-light: #ef4444; /* Blood highlight red */
+  --color-fantasy-slate-900: #05070a; /* Obsidian deep background */
+  --color-fantasy-slate-800: rgba(255, 255, 255, 0.05); /* Translucent frosted white */
+  --color-fantasy-slate-750: rgba(255, 255, 255, 0.08); /* Translucent slightly lighter active state */
+  --color-fantasy-slate-700: rgba(255, 255, 255, 0.1); /* Frosted border */
+  --color-fantasy-slate-650: rgba(255, 255, 255, 0.12);
+  --color-fantasy-slate-600: rgba(255, 255, 255, 0.15); /* Glass highlight */
+}
+
+/* Base resets & scrollbars with premium glass styling */
+html, body, #root {
+  background-color: #05070a;
+  color: #f1f5f9;
+  font-family: var(--font-sans);
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Glassmorphism custom classes applied automatically to container utility triggers */
+.bg-fantasy-slate-800 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+}
+
+.bg-fantasy-slate-900 {
+  background-color: #05070a !important;
+}
+
+.bg-fantasy-slate-905 {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.border-fantasy-slate-700 {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.bg-fantasy-slate-950 {
+  background-color: rgba(2, 3, 5, 0.7) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Custom styled scrollbars for sections */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Interactive pulses */
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 16px 4px rgba(245, 158, 11, 0.4);
+  }
+}
+
+@keyframes bloodPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(153, 0, 0, 0.3);
+    border-color: rgba(153, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 14px 3px rgba(239, 68, 68, 0.5);
+    border-color: rgba(239, 68, 68, 0.9);
+  }
+}
+
+.gold-pulse-btn {
+  animation: goldPulse 3s infinite;
+}
+
+.blood-pulse-btn {
+  animation: bloodPulse 2.5s infinite;
+}
+
+.blood-glow-text {
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Pull-to-action touch target sizes */
+button {
+  cursor: pointer;
+}

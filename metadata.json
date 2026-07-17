@@ -1,0 +1,6 @@
+{
+  "name": "Ficha D&D 5E Percival",
+  "description": "Ficha digital interativa de D&D 5E para o personagem Percival O Triturador, otimizada para dispositivos móveis com sincronização em tempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
