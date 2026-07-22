@@ -8,13 +8,15 @@ interface SpellsTabProps {
   onUpdateSpellSlots: (slots: SpellSlots) => void;
   onUpdateSpells: (spells: Spell[]) => void;
   onUseSpellSlot: (level: 1 | 2) => boolean;
+  onToggleHuntersMark?: (active?: boolean) => void;
 }
 
 export default function SpellsTab({
   char,
   onUpdateSpellSlots,
   onUpdateSpells,
-  onUseSpellSlot
+  onUseSpellSlot,
+  onToggleHuntersMark
 }: SpellsTabProps) {
   const [activeTab, setActiveTab] = useState<"prepared" | "all">("prepared");
   const [showAddSpell, setShowAddSpell] = useState(false);
@@ -96,7 +98,10 @@ export default function SpellsTab({
       const success = onUseSpellSlot(spell.level as 1 | 2);
       if (success) {
         let msg = `Magia "${spell.name}" conjurada! Espaço de magia consumido na ficha.`;
-        if (spell.name.toLowerCase().includes("curar")) {
+        if (spell.name.toLowerCase().includes("caçador") || spell.name.toLowerCase().includes("hunter")) {
+          onToggleHuntersMark?.(true);
+          msg = `🎯 Marca do Caçador conjurada! Efeito ativado e destacado na aba de Combate (+1d6 de dano por ataque).`;
+        } else if (spell.name.toLowerCase().includes("curar")) {
           msg += ` Role 1d8 + ${chaMod} (+4) de cura divina.`;
         } else if (spell.name.toLowerCase().includes("destruição")) {
           msg += ` Adicione o dano extra ao seu próximo ataque físico!`;

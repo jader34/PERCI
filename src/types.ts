@@ -95,6 +95,14 @@ export interface CharacterData {
     max: number;
     current: number;
   };
+  channelDivinity?: {
+    max: number;
+    current: number;
+  };
+  bloodBlessing?: {
+    max: number;
+    current: number;
+  };
   spellSlots: SpellSlots;
   spells: Spell[];
   inventory: InventoryItem[];
@@ -105,4 +113,5 @@ export interface CharacterData {
   };
   features: Feature[];
   notes: string;
+  huntersMarkActive?: boolean;
 }

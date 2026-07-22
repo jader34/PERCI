@@ -1,9 +1,9 @@
 {
-  "apiKey": "",
-  "authDomain": "",
-  "projectId": "dummy-project-id",
-  "storageBucket": "",
-  "messagingSenderId": "",
-  "appId": "",
+  "apiKey": "AIzaSyD6-jQZiAxyvfX0hBk9MJwf_b47TChfp3U",
+  "authDomain": "perci-47ab0.firebaseapp.com",
+  "projectId": "perci-47ab0",
+  "storageBucket": "perci-47ab0.firebasestorage.app",
+  "messagingSenderId": "374364901745",
+  "appId": "1:374364901745:web:0406739a886dc5a912e6d0",
   "firestoreDatabaseId": "(default)"
 }

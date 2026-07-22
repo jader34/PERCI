@@ -51,6 +51,14 @@ export const defaultCharacterData: CharacterData = {
     max: 5, // 1 + CHA mod (4)
     current: 5
   },
+  channelDivinity: {
+    max: 1,
+    current: 1
+  },
+  bloodBlessing: {
+    max: 1,
+    current: 1
+  },
   spellSlots: {
     level1: { max: 4, current: 4 },
     level2: { max: 2, current: 2 },
@@ -275,6 +283,12 @@ export const defaultCharacterData: CharacterData = {
       name: "Saúde Divina (Divine Health)",
       source: "Classe - Paladino Nív 3",
       description: "A energia divina fluindo em suas veias torna você imune a doenças naturais e mágicas."
+    },
+    {
+      id: "f8",
+      name: "Canalizar Divindade (Channel Divinity)",
+      source: "Juramento de Sangue - Paladino Nív 3",
+      description: "Você canaliza magia divina de sangue (1 uso por descanso curto ou longo) para alimentar um dos seguintes efeitos:\n\n1. Absorver Vitalidade (Ação): Toque uma criatura. Ela deve passar em um teste de Constituição (CD 15) ou ficará IMPEDIDA pela falta de vitalidade. Repete o salvamento ao final de cada turno dela.\n\n2. Bênção de Sangue (Ação): Imbui sua arma por 1 min. Adiciona seu mod. de Carisma (+4) às jogadas de ataque. O 1º ataque bem-sucedido causa dano Necrótico e aplica uma Marca de Sangue por 1 turno. Alvos marcados sofrem +4 de dano Necrótico no próximo ataque e a marca se move se o alvo morrer. Arma emite luz escarlate (6m) e conta como mágica."
     },
     {
       id: "f7",
