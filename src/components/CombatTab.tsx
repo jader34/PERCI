@@ -687,7 +687,7 @@ export default function CombatTab({
                   </span>
                 </div>
                 <p className="text-[11px] text-gray-300 leading-relaxed">
-                  Imbua sua arma por 1 min. Ganha <strong className="text-red-300">+4 nas jogadas de ataque</strong> (Mod. CAR). 1º acerto causa dano Necrótico e aplica <strong className="text-red-300">Marca de Sangue</strong>.
+                  Imbua sua arma por 1 min. Ganha <strong className="text-red-300">+4 nas jogadas de ataque</strong> (Mod. CAR). 1º acerto causa dano Radiante e aplica <strong className="text-red-300">Marca de Sangue</strong>.
                 </p>
               </div>
 
