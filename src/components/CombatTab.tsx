@@ -200,7 +200,7 @@ export default function CombatTab({
               {char.ac}
             </span>
             <span className="text-[10px] text-gray-300 font-medium leading-tight">
-              {char.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("placa-1")) ? "Armadura Placa-1" : "Armadura Placa"}
+              {char.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("placa")) ? "Armadura de Placa" : "Armadura"}
               {char.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("escudo")) ? " + Escudo" : ""}
             </span>
           </div>
@@ -789,7 +789,7 @@ export default function CombatTab({
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="p-2.5 bg-fantasy-slate-900/60 border border-fantasy-slate-755 rounded-xl">
                 <span className="text-[9px] font-mono text-gray-400 uppercase tracking-wider block">Armadura (CA)</span>
-                <span className="text-base font-bold font-mono text-fantasy-gold-light">11</span>
+                <span className="text-base font-bold font-mono text-fantasy-gold-light">17</span>
               </div>
               <div
                 onClick={() => setShowMountHpControls(!showMountHpControls)}
