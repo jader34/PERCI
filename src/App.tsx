@@ -31,18 +31,6 @@ import { CharacterData, Skill, Feature, Spell, SpellSlots, InventoryItem } from 
 // Normalize character data to include new features and resources if missing
 function ensureNewDataFields(data: CharacterData): CharacterData {
   const updated = { ...data };
-  if (!updated.hp) {
-    updated.hp = { max: 52, current: 52, temp: 0 };
-  } else if (updated.hp.max < 52) {
-    const diff = 52 - updated.hp.max;
-    updated.hp = {
-      ...updated.hp,
-      max: 52,
-      current: Math.min(updated.hp.current + diff, 52)
-    };
-  }
-function ensureNewDataFields(data: CharacterData): CharacterData {
-  const updated = { ...data };
   if (!updated.channelDivinity) {
     updated.channelDivinity = { max: 1, current: 1 };
   }
