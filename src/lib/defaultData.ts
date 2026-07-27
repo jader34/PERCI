@@ -184,6 +184,42 @@ export const defaultCharacterData: CharacterData = {
       duration: "Concentração, até 1 minuto",
       description: "[Magia de Juramento] Deixe um humanoide paralisado (CD 15 de Sabedoria para resistir). Ataques contra ele a até 1,5m são críticos automáticos!",
       prepared: true
+    },
+    {
+      id: "s11",
+      name: "Oração Curativa (Prayer of Healing)",
+      level: 2,
+      school: "Evocação",
+      castingTime: "10 minutos",
+      range: "9 metros",
+      components: "V",
+      duration: "Instantânea",
+      description: "Uma corrente de energia curativa emana de você para recuperar até seis criaturas à sua escolha que você possa ver dentro do alcance. Cada alvo recupera 2d8 + 4 HP. Sem efeito em mortos-vivos ou constructos.",
+      prepared: true
+    },
+    {
+      id: "s12",
+      name: "Repouso Tranquilo (Gentle Repose)",
+      level: 2,
+      school: "Necromancia (Ritual)",
+      castingTime: "1 ação",
+      range: "Toque",
+      components: "V, S, M (uma pitada de sal e duas moedas de cobre sobre os olhos)",
+      duration: "10 dias",
+      description: "Protege um cadáver contra decomposição e impede que se torne um morto-vivo. Estende o limite de tempo para magias de ressurreição.",
+      prepared: true
+    },
+    {
+      id: "s13",
+      name: "Vínculo Protetor (Warding Bond)",
+      level: 2,
+      school: "Abjuração",
+      castingTime: "1 ação",
+      range: "Toque",
+      components: "V, S, M (par de anéis de platina de no mínimo 50 po cada)",
+      duration: "1 hora",
+      description: "Cria um vínculo com um aliado a até 18m. Ele ganha +1 na CA e testes de resistência, além de resistência a todo dano. Sempre que ele sofre dano, você sofre a mesma quantidade de dano.",
+      prepared: true
     }
   ],
   inventory: [

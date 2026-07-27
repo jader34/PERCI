@@ -76,6 +76,14 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
       }
     }
   }
+  if (updated.spells) {
+    const newSpellsToAdd = defaultCharacterData.spells.filter(
+      (ds) => !updated.spells.some((s) => s.id === ds.id || s.name.toLowerCase().startsWith(ds.name.split(" ")[0].toLowerCase()))
+    );
+    if (newSpellsToAdd.length > 0) {
+      updated.spells = [...updated.spells, ...newSpellsToAdd];
+    }
+  }
   return updated;
 }
 

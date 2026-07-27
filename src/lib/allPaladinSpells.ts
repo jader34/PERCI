@@ -247,6 +247,39 @@ export const allPaladinSpells: Omit<Spell, "prepared">[] = [
     description: "Você toca uma criatura e encerra uma doença ou uma condição que a afete. A condição pode ser cego, surdo, paralisado ou envenenado."
   },
   {
+    id: "class_prayer_of_healing",
+    name: "Oração Curativa",
+    level: 2,
+    school: "Evocação",
+    castingTime: "10 minutos",
+    range: "9 metros",
+    components: "V",
+    duration: "Instantânea",
+    description: "Uma corrente de energia curativa emana de você para recuperar até seis criaturas à sua escolha que você possa ver dentro do alcance. Cada alvo recupera uma quantidade de pontos de vida igual a 2d8 + seu modificador de habilidade de conjuração (+4 para Percival). Esta magia não tem efeito em mortos-vivos ou constructos."
+  },
+  {
+    id: "class_gentle_repose",
+    name: "Repouso Tranquilo",
+    level: 2,
+    school: "Necromancia (Ritual)",
+    castingTime: "1 ação",
+    range: "Toque",
+    components: "V, S, M (uma pitada de sal e uma moeda de cobre colocada sobre cada olho do cadáver, que devem permanecer lá pela duração)",
+    duration: "10 dias",
+    description: "Você toca um cadáver ou outros restos mortais. Pela duração, o alvo fica protegido contra decomposição e não pode se tornar um morto-vivo. Esta magia também estende o limite de tempo para ressuscitar a criatura alvo, já que os dias passados sob a influência desta magia não contam para o limite de tempo de magias como Reviver os Mortos."
+  },
+  {
+    id: "class_warding_bond",
+    name: "Vínculo Protetor",
+    level: 2,
+    school: "Abjuração",
+    castingTime: "1 ação",
+    range: "Toque",
+    components: "V, S, M (um par de anéis de platina no valor de pelo menos 50 po cada, que você e o alvo devem usar pela duração)",
+    duration: "1 hora",
+    description: "Esta magia conecta uma criatura voluntária que você tocar a você até a magia acabar. Enquanto o alvo estiver a até 18 metros de você, ele recebe +1 de bônus na CA e em testes de resistência, e tem resistência a todo tipo de dano. Além disso, sempre que o alvo sofrer dano, você sofre a mesma quantidade de dano. A magia acaba se você cair a 0 pontos de vida ou se você e o alvo se distanciarem mais de 18 metros."
+  },
+  {
     id: "class_zone_of_truth",
     name: "Zona da Verdade",
     level: 2,
