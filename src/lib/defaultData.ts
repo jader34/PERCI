@@ -11,7 +11,7 @@ export const defaultCharacterData: CharacterData = {
     current: 52,
     temp: 0
   },
-  ac: 17, // Placa-1 (17)
+  ac: 18, // Placa (18)
   speed: "9m (30ft)",
   initiativeBonus: 0,
   attributes: {
@@ -198,9 +198,9 @@ export const defaultCharacterData: CharacterData = {
     },
     {
       id: "i2",
-      name: "Armadura de Placa-1",
+      name: "Armadura de Placa",
       quantity: 1,
-      description: "Sua armadura de placa pesada, ligeiramente modificada ou danificada. Concede CA 17 fixa. Desvantagem em Furtividade.",
+      description: "Sua armadura de placa pesada. Concede CA 18 fixa. Desvantagem em Furtividade.",
       weight: 30,
       isMagical: false,
       equipped: true

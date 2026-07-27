@@ -55,10 +55,26 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
   } else if (cdFeat) {
     updated.features = [...updated.features, cdFeat];
   }
-  const hasBB = updated.features.some((f) => f.name.toLowerCase().includes("bênção de sangue"));
-  if (!hasBB) {
-    const bbFeat = defaultCharacterData.features.find((f) => f.id === "f9");
-    if (bbFeat) updated.features = [...updated.features, bbFeat];
+  if (updated.inventory) {
+    let itemUpdated = false;
+    updated.inventory = updated.inventory.map((item) => {
+      if (item.id === "i2" || item.name.toLowerCase().includes("placa-1")) {
+        itemUpdated = true;
+        return {
+          ...item,
+          name: "Armadura de Placa",
+          description: "Sua armadura de placa pesada. Concede CA 18 fixa. Desvantagem em Furtividade."
+        };
+      }
+      return item;
+    });
+    if (itemUpdated || updated.ac === 17) {
+      const hasPlate = updated.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("placa"));
+      const hasShield = updated.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("escudo"));
+      if (hasPlate) {
+        updated.ac = 18 + (hasShield ? 2 : 0);
+      }
+    }
   }
   return updated;
 }
