@@ -7,8 +7,8 @@ export const defaultCharacterData: CharacterData = {
   level: 5,
   xp: 6500,
   hp: {
-    max: 50,
-    current: 50,
+    max: 52,
+    current: 52,
     temp: 0
   },
   ac: 17, // Placa-1 (17)

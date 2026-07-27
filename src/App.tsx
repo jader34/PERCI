@@ -37,6 +37,13 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
   if (!updated.bloodBlessing) {
     updated.bloodBlessing = { max: 1, current: 1 };
   }
+  if (updated.hp && updated.hp.max === 50) {
+    updated.hp = {
+      ...updated.hp,
+      max: 52,
+      current: updated.hp.current === 50 ? 52 : Math.min(52, updated.hp.current + 2)
+    };
+  }
   const cdIndex = updated.features.findIndex((f) => f.name.toLowerCase().includes("canalizar divindade"));
   const cdFeat = defaultCharacterData.features.find((f) => f.id === "f8");
   if (cdIndex >= 0 && cdFeat) {
