@@ -34,9 +34,13 @@ export default function SpellsTab({
   const profBonus = Math.floor((char.level - 1) / 4) + 2;
   const chaMod = Math.floor((char.attributes.cha.value - 10) / 2);
 
+  // Check if Amuleto do Devoto (+1) is equipped
+  const devoutItem = char.inventory.find((i) => i.equipped && i.name.toLowerCase().includes("amuleto do devoto"));
+  const devoutBonus = devoutItem ? 1 : 0;
+
   // Magic formula calculations
-  const spellSaveDc = 8 + profBonus + chaMod; // 8 + 3 + 4 = 15
-  const spellAttackBonus = profBonus + chaMod; // 3 + 4 = +7
+  const spellSaveDc = 8 + profBonus + chaMod + devoutBonus; // 8 + 3 + 4 + 1 = 16
+  const spellAttackBonus = profBonus + chaMod + devoutBonus; // 3 + 4 + 1 = +8
 
   // Limit of prepared spells: Carisma mod (+4) + Metade do nível Paladino (5 / 2 = 2) = 6
   const maxPrepared = chaMod + Math.floor(char.level / 2); // 4 + 2 = 6
@@ -233,7 +237,7 @@ export default function SpellsTab({
             {spellSaveDc}
           </span>
           <span className="text-[10px] text-gray-500 font-mono">
-            8 + {profBonus} (prof) + {chaMod} (car)
+            8 + {profBonus} (prof) + {chaMod} (car){devoutBonus > 0 ? ` + ${devoutBonus} (amuleto)` : ""}
           </span>
         </div>
 
@@ -249,7 +253,7 @@ export default function SpellsTab({
             +{spellAttackBonus}
           </span>
           <span className="text-[10px] text-gray-500 font-mono">
-            {profBonus} (prof) + {chaMod} (car)
+            {profBonus} (prof) + {chaMod} (car){devoutBonus > 0 ? ` + ${devoutBonus} (amuleto)` : ""}
           </span>
         </div>
       </div>

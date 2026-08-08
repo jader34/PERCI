@@ -243,10 +243,10 @@ export const defaultCharacterData: CharacterData = {
     },
     {
       id: "i5",
-      name: "Amuleto Sagrado (Símbolo)",
+      name: "Amuleto do Devoto (+1)",
       quantity: 1,
-      description: "Amuleto de prata com o punho de ferro estalando relâmpagos. Serve como foco de conjuração.",
-      weight: 0.5,
+      description: "Item maravilhoso, incomum (+1) (requer sintonização por um clérigo ou paladino). Enquanto você usa este sagrado símbolo, você ganha um bônus (+1) para jogadas de ataque de feitiço e as CDs de teste de resistência de seus feitiços (+1 na CD e no ataque mágico). Enquanto você usa este amuleto, você pode usar seu recurso Canalizar Divindade 1 vez sem gastar um dos usos do recurso. Uma vez que esta propriedade é usada, não pode ser usada novamente até o próximo amanhecer.",
+      weight: 1,
       isMagical: true,
       equipped: true
     },
@@ -324,7 +324,13 @@ export const defaultCharacterData: CharacterData = {
       id: "f8",
       name: "Canalizar Divindade (Channel Divinity)",
       source: "Juramento de Sangue - Paladino Nív 3",
-      description: "Você canaliza magia divina de sangue (1 uso por descanso curto ou longo) para alimentar um dos seguintes efeitos:\n\n1. Absorver Vitalidade (Ação): Toque uma criatura. Ela deve passar em um teste de Constituição (CD 15) ou ficará IMPEDIDA pela falta de vitalidade. Repete o salvamento ao final de cada turno dela.\n\n2. Bênção de Sangue (Ação): Imbui sua arma por 1 min. Adiciona seu mod. de Carisma (+4) às jogadas de ataque. O 1º ataque bem-sucedido causa dano Necrótico e aplica uma Marca de Sangue por 1 turno. Alvos marcados sofrem +4 de dano Necrótico no próximo ataque e a marca se move se o alvo morrer. Arma emite luz escarlate (6m) e conta como mágica."
+      description: "Você canaliza magia divina de sangue (1 uso por descanso curto ou longo) para alimentar um dos seguintes efeitos:\n\n1. Absorver Vitalidade (Ação): Toque uma criatura. Ela deve passar em um teste de Constituição (CD de Magia) ou ficará IMPEDIDA pela falta de vitalidade. Repete o salvamento ao final de cada turno dela.\n\n2. Bênção de Sangue (Ação): Imbui sua arma por 1 min. Adiciona seu mod. de Carisma (+4) às jogadas de ataque. O 1º ataque bem-sucedido causa dano Necrótico e aplica uma Marca de Sangue por 1 turno. Alvos marcados sofrem +4 de dano Necrótico no próximo ataque e a marca se move se o alvo morrer. Arma emite luz escarlate (6m) e conta como mágica."
+    },
+    {
+      id: "f9",
+      name: "Amuleto do Devoto (+1)",
+      source: "Item Mágico Equipada",
+      description: "Item maravilhoso, incomum (+1) (requer sintonização por clérigo ou paladino). Concede +1 nas jogadas de ataque de feitiço e +1 na CD dos testes de resistência das suas magias. Permite usar Canalizar Divindade 1 vez por dia sem gastar um dos usos do recurso (recarrega ao amanhecer)."
     },
     {
       id: "f7",

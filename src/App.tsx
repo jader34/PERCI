@@ -66,8 +66,34 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
           description: "Sua armadura de placa pesada. Concede CA 18 fixa. Desvantagem em Furtividade."
         };
       }
+      if (item.id === "i5" || item.name.toLowerCase().includes("amuleto sagrado")) {
+        itemUpdated = true;
+        return {
+          ...item,
+          id: "i5",
+          name: "Amuleto do Devoto (+1)",
+          description: "Item maravilhoso, incomum (+1) (requer sintonização por um clérigo ou paladino). Enquanto você usa este sagrado símbolo, você ganha um bônus (+1) para jogadas de ataque de feitiço e as CDs de teste de resistência de seus feitiços (+1 na CD e no ataque mágico). Enquanto você usa este amuleto, você pode usar seu recurso Canalizar Divindade 1 vez sem gastar um dos usos do recurso. Uma vez que esta propriedade é usada, não pode ser usada novamente até o próximo amanhecer.",
+          weight: 1,
+          isMagical: true,
+          equipped: true
+        };
+      }
       return item;
     });
+
+    const hasDevoutItem = updated.inventory.some((i) => i.name.toLowerCase().includes("amuleto do devoto"));
+    if (!hasDevoutItem) {
+      updated.inventory.push({
+        id: "i5",
+        name: "Amuleto do Devoto (+1)",
+        quantity: 1,
+        description: "Item maravilhoso, incomum (+1) (requer sintonização por um clérigo ou paladino). Enquanto você usa este sagrado símbolo, você ganha um bônus (+1) para jogadas de ataque de feitiço e as CDs de teste de resistência de seus feitiços (+1 na CD e no ataque mágico). Enquanto você usa este amuleto, você pode usar seu recurso Canalizar Divindade 1 vez sem gastar um dos usos do recurso. Uma vez que esta propriedade é usada, não pode ser usada novamente até o próximo amanhecer.",
+        weight: 1,
+        isMagical: true,
+        equipped: true
+      });
+    }
+
     if (itemUpdated || updated.ac === 17) {
       const hasPlate = updated.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("placa"));
       const hasShield = updated.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("escudo"));
@@ -76,6 +102,15 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
       }
     }
   }
+
+  const hasDevoutFeat = updated.features.some((f) => f.name.toLowerCase().includes("amuleto do devoto"));
+  if (!hasDevoutFeat) {
+    const devoutFeat = defaultCharacterData.features.find((f) => f.id === "f9");
+    if (devoutFeat) {
+      updated.features.push(devoutFeat);
+    }
+  }
+
   if (updated.spells) {
     const newSpellsToAdd = defaultCharacterData.spells.filter(
       (ds) => !updated.spells.some((s) => s.id === ds.id || s.name.toLowerCase().startsWith(ds.name.split(" ")[0].toLowerCase()))
@@ -215,6 +250,13 @@ export default function App() {
     }));
   };
 
+  const handleToggleDevoutAmulet = (used?: boolean) => {
+    saveCharacterData((prev) => ({
+      ...prev,
+      devoutAmuletUsed: used !== undefined ? used : !prev.devoutAmuletUsed
+    }));
+  };
+
   const handleUpdateInventory = (inventory: InventoryItem[]) => {
     // If equipment changes, let's optionally recalculate armor class (CA)!
     // Example: Placa adds 18. Escudo adds 2.
@@ -311,6 +353,9 @@ export default function App() {
     updated.spellSlots.level1.current = updated.spellSlots.level1.max;
     updated.spellSlots.level2.current = updated.spellSlots.level2.max;
 
+    // 7. Recharge Amuleto do Devoto free Channel Divinity use
+    updated.devoutAmuletUsed = false;
+
     saveCharacterData(updated);
     setShowLongRestConfirm(false);
   };
@@ -383,6 +428,7 @@ export default function App() {
                 onOpenHpModal={() => setIsHpModalOpen(true)}
                 onUseSpellSlot={handleUseSpellSlot}
                 onToggleHuntersMark={handleToggleHuntersMark}
+                onToggleDevoutAmulet={handleToggleDevoutAmulet}
               />
             )}
             {activeTab === "features" && (

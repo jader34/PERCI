@@ -114,4 +114,5 @@ export interface CharacterData {
   features: Feature[];
   notes: string;
   huntersMarkActive?: boolean;
+  devoutAmuletUsed?: boolean;
 }

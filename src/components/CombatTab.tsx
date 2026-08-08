@@ -9,6 +9,7 @@ interface CombatTabProps {
   onOpenHpModal: () => void;
   onUseSpellSlot: (level: 1 | 2) => boolean;
   onToggleHuntersMark?: (active?: boolean) => void;
+  onToggleDevoutAmulet?: (used?: boolean) => void;
 }
 
 export default function CombatTab({
@@ -17,7 +18,8 @@ export default function CombatTab({
   onUpdateResource,
   onOpenHpModal,
   onUseSpellSlot,
-  onToggleHuntersMark
+  onToggleHuntersMark,
+  onToggleDevoutAmulet
 }: CombatTabProps) {
   const [smiteSlot, setSmiteSlot] = useState<1 | 2>(1);
   const [layOnHandsAmountStr, setLayOnHandsAmountStr] = useState("");
@@ -52,25 +54,59 @@ export default function CombatTab({
   const chaMod = Math.floor((char.attributes.cha.value - 10) / 2);
   const profBonus = Math.floor((char.level - 1) / 4) + 2;
 
+  const hasDevoutAmulet = char.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("amuleto do devoto"));
+  const devoutBonus = hasDevoutAmulet ? 1 : 0;
+  const spellSaveDc = 8 + profBonus + chaMod + devoutBonus;
+
   const bloodBlessing = char.bloodBlessing || { max: 1, current: 1 };
   const channelDivinity = char.channelDivinity || { max: 1, current: 1 };
 
-  const handleToggleBlessing = () => {
+  const handleToggleBlessing = (useAmulet: boolean = false) => {
     if (blessingActive) {
       setBlessingActive(false);
       setCdSuccessMsg("Bênção de Sangue desativada.");
       setTimeout(() => setCdSuccessMsg(""), 4000);
     } else {
-      if (channelDivinity.current > 0) {
-        onUpdateResource("channelDivinity", channelDivinity.current - 1);
+      if (useAmulet) {
+        onToggleDevoutAmulet?.(true);
+        setBlessingActive(true);
+        setCdSuccessMsg("🔮 Bênção de Sangue Ativada via Amuleto do Devoto! (Sem gastar uso padrão). (+4 nas jogadas de ataque na Alabarda).");
+      } else {
+        if (channelDivinity.current > 0) {
+          onUpdateResource("channelDivinity", channelDivinity.current - 1);
+        }
+        setBlessingActive(true);
+        setCdSuccessMsg("🩸 Bênção de Sangue Ativada por Canalizar Divindade! (+4 nas jogadas de ataque na Alabarda, 1º acerto causa dano Radiante e aplica Marca de Sangue).");
       }
-      setBlessingActive(true);
-      setCdSuccessMsg("🩸 Bênção de Sangue Ativada por Canalizar Divindade! (+4 nas jogadas de ataque na Alabarda, 1º acerto causa dano Radiante e aplica Marca de Sangue).");
       setTimeout(() => setCdSuccessMsg(""), 8000);
     }
   };
 
-  const handleChannelDivinity = (option: "absorb" | "bless") => {
+  const handleChannelDivinity = (option: "absorb" | "bless", forceAmulet: boolean = false) => {
+    const useAmulet = forceAmulet || (channelDivinity.current <= 0 && hasDevoutAmulet && !char.devoutAmuletUsed);
+
+    if (useAmulet) {
+      if (!hasDevoutAmulet) {
+        setCdSuccessMsg("⚠️ Você não possui o Amuleto do Devoto equipado!");
+        setTimeout(() => setCdSuccessMsg(""), 6000);
+        return;
+      }
+      if (char.devoutAmuletUsed) {
+        setCdSuccessMsg("⚠️ O uso do Amuleto do Devoto já foi utilizado hoje! (Recarrega no próximo amanhecer)");
+        setTimeout(() => setCdSuccessMsg(""), 6000);
+        return;
+      }
+
+      if (option === "absorb") {
+        onToggleDevoutAmulet?.(true);
+        setCdSuccessMsg(`🔮 Absorver Vitalidade Ativado via Amuleto do Devoto! (Sem gastar uso padrão). Alvo deve passar em Salvaguarda de Constituição (CD ${spellSaveDc}) ou ficará IMPEDIDO.`);
+        setTimeout(() => setCdSuccessMsg(""), 8000);
+      } else if (option === "bless") {
+        handleToggleBlessing(true);
+      }
+      return;
+    }
+
     if (option === "absorb") {
       if (channelDivinity.current <= 0) {
         setCdSuccessMsg("⚠️ Sem usos restantes de Canalizar Divindade! (Necessita descanso curto ou longo)");
@@ -78,10 +114,10 @@ export default function CombatTab({
         return;
       }
       onUpdateResource("channelDivinity", channelDivinity.current - 1);
-      setCdSuccessMsg("🩸 Absorver Vitalidade Ativado! Alvo tocado deve passar em Salvaguarda de Constituição (CD 15) ou ficará IMPEDIDO. Repete o salvamento no final de cada turno dele.");
+      setCdSuccessMsg(`🩸 Absorver Vitalidade Ativado! Alvo tocado deve passar em Salvaguarda de Constituição (CD ${spellSaveDc}) ou ficará IMPEDIDO. Repete o salvamento no final de cada turno dele.`);
       setTimeout(() => setCdSuccessMsg(""), 8000);
     } else if (option === "bless") {
-      handleToggleBlessing();
+      handleToggleBlessing(false);
     }
   };
 
@@ -610,13 +646,28 @@ export default function CombatTab({
                 Canalizar Divindade (Juramento de Sangue)
               </h5>
               <p className="text-[11px] text-gray-300 mt-0.5">
-                CD de Salvaguarda de Magia: <span className="font-mono font-bold text-red-300">CD 15 (CON)</span> • 1 uso por descanso curto/longo
+                CD de Salvaguarda de Magia: <span className="font-mono font-bold text-red-300">CD {spellSaveDc} (CON)</span> • 1 uso por descanso curto/longo
+                {hasDevoutAmulet && <span className="text-fantasy-gold ml-1 font-semibold">(+1 do Amuleto)</span>}
               </p>
             </div>
-            <div className="flex items-center gap-2 self-start sm:self-auto">
+            <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
               <span className="text-xs font-mono font-bold text-red-300 bg-red-950/60 border border-red-800/60 px-3 py-1 rounded-full shadow-inner">
                 Usos: {channelDivinity.current} / {channelDivinity.max}
               </span>
+              {hasDevoutAmulet && (
+                <button
+                  type="button"
+                  onClick={() => onToggleDevoutAmulet?.(!char.devoutAmuletUsed)}
+                  className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border transition-all ${
+                    char.devoutAmuletUsed
+                      ? "bg-gray-800/80 text-gray-400 border-gray-700"
+                      : "bg-fantasy-gold/20 text-fantasy-gold border-fantasy-gold/40 shadow-[0_0_8px_rgba(245,158,11,0.2)] animate-pulse"
+                  }`}
+                  title="Uso gratuito concedido pelo Amuleto do Devoto (1 por dia até o amanhecer)"
+                >
+                  🔮 Amuleto: {char.devoutAmuletUsed ? "Usado ✖" : "Disponível (1/1) ✓"}
+                </button>
+              )}
               {channelDivinity.current < channelDivinity.max && (
                 <button
                   type="button"
@@ -645,7 +696,7 @@ export default function CombatTab({
                   </span>
                 </div>
                 <p className="text-[11px] text-gray-300 leading-relaxed">
-                  Invoque magia de sangue ao tocar uma criatura. Alvo deve passar em <strong className="text-red-300">CD 15 Constituição</strong> ou ficará <strong className="text-red-300">IMPEDIDO</strong>. Repete o salvamento a cada turno.
+                  Invoque magia de sangue ao tocar uma criatura. Alvo deve passar em <strong className="text-red-300">CD {spellSaveDc} Constituição</strong> ou ficará <strong className="text-red-300">IMPEDIDO</strong>. Repete o salvamento a cada turno.
                 </p>
               </div>
 
@@ -723,7 +774,7 @@ export default function CombatTab({
                 Absorver Vitalidade — Texto da Regra
               </div>
               <p className="leading-relaxed text-[11px] text-gray-300">
-                Você pode usar seu Canalizar Divindade para invocar magia de sangue para absorver parte da vitalidade de um oponente. Com uma ação, você pode tocar uma criatura, que deve ser bem sucedida num teste de salvaguarda de Constituição contra o seu CD de salvaguarda de magia (CD 15) ou ficará <strong>impedida</strong>.
+                Você pode usar seu Canalizar Divindade para invocar magia de sangue para absorver parte da vitalidade de um oponente. Com uma ação, você pode tocar uma criatura, que deve ser bem sucedida num teste de salvaguarda de Constituição contra o seu CD de salvaguarda de magia (CD {spellSaveDc}) ou ficará <strong>impedida</strong>.
               </p>
               <p className="leading-relaxed text-[11px] text-gray-300">
                 Enquanto estiver impedida pela falta de vitalidade, a criatura repete o teste de resistência no final de cada turno dela. Se obtiver sucesso, ela se liberta.
