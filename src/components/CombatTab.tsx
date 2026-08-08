@@ -62,23 +62,46 @@ export default function CombatTab({
   const channelDivinity = char.channelDivinity || { max: 1, current: 1 };
 
   const handleToggleBlessing = (useAmulet: boolean = false) => {
+    const isAmuletUse = typeof useAmulet === "boolean" ? useAmulet : false;
+
     if (blessingActive) {
       setBlessingActive(false);
       setCdSuccessMsg("Bênção de Sangue desativada.");
       setTimeout(() => setCdSuccessMsg(""), 4000);
-    } else {
-      if (useAmulet) {
-        onToggleDevoutAmulet?.(true);
-        setBlessingActive(true);
-        setCdSuccessMsg("🔮 Bênção de Sangue Ativada via Amuleto do Devoto! (Sem gastar uso padrão). (+4 nas jogadas de ataque na Alabarda).");
-      } else {
-        if (channelDivinity.current > 0) {
-          onUpdateResource("channelDivinity", channelDivinity.current - 1);
-        }
-        setBlessingActive(true);
-        setCdSuccessMsg("🩸 Bênção de Sangue Ativada por Canalizar Divindade! (+4 nas jogadas de ataque na Alabarda, 1º acerto causa dano Radiante e aplica Marca de Sangue).");
+      return;
+    }
+
+    if (isAmuletUse) {
+      if (!hasDevoutAmulet) {
+        setCdSuccessMsg("⚠️ Você não possui o Amuleto do Devoto equipado!");
+        setTimeout(() => setCdSuccessMsg(""), 6000);
+        return;
       }
+      if (char.devoutAmuletUsed) {
+        setCdSuccessMsg("⚠️ O uso do Amuleto do Devoto já foi utilizado hoje! (Recarrega no próximo amanhecer)");
+        setTimeout(() => setCdSuccessMsg(""), 6000);
+        return;
+      }
+      onToggleDevoutAmulet?.(true);
+      setBlessingActive(true);
+      setCdSuccessMsg("🔮 Bênção de Sangue Ativada via Amuleto do Devoto! (Sem gastar uso padrão). (+4 nas jogadas de ataque na Alabarda).");
       setTimeout(() => setCdSuccessMsg(""), 8000);
+      return;
+    }
+
+    if (channelDivinity.current > 0) {
+      onUpdateResource("channelDivinity", channelDivinity.current - 1);
+      setBlessingActive(true);
+      setCdSuccessMsg("Bênção de Sangue Ativada por Canalizar Divindade! (+4 nas jogadas de ataque na Alabarda, 1º acerto causa dano Radiante e aplica Marca de Sangue).");
+      setTimeout(() => setCdSuccessMsg(""), 8000);
+    } else if (hasDevoutAmulet && !char.devoutAmuletUsed) {
+      onToggleDevoutAmulet?.(true);
+      setBlessingActive(true);
+      setCdSuccessMsg("Bênção de Sangue Ativada via Amuleto do Devoto! (Sem gastar uso padrão). (+4 nas jogadas de ataque na Alabarda).");
+      setTimeout(() => setCdSuccessMsg(""), 8000);
+    } else {
+      setCdSuccessMsg("⚠️ Sem usos restantes de Canalizar Divindade ou do Amuleto do Devoto! (Necessita descanso)");
+      setTimeout(() => setCdSuccessMsg(""), 6000);
     }
   };
 
@@ -154,7 +177,7 @@ export default function CombatTab({
   const handleDivineSense = () => {
     if (char.divineSense.current <= 0) return;
     onUpdateResource("divineSense", char.divineSense.current - 1);
-    
+
     // Show physical intuition guidance message
     setSenseSuccessMsg("Sentido Divino ativo! Concentre-se por 1 rodada para detectar seres celestiais, corruptores ou mortos-vivos.");
     setTimeout(() => setSenseSuccessMsg(""), 7000);
@@ -167,11 +190,10 @@ export default function CombatTab({
         {/* HP Controls (Click/Hold) */}
         <div
           onClick={onOpenHpModal}
-          className={`relative bg-gradient-to-br from-red-950/40 via-slate-900 to-fantasy-slate-900 border transition-all duration-300 rounded-2xl p-4 flex flex-col justify-between active:scale-[0.97] cursor-pointer overflow-hidden shadow-lg shadow-red-950/20 ${
-            char.hp.current <= char.hp.max * 0.4
-              ? "border-red-550/80 bg-gradient-to-b from-[#2a0505] to-[#0d0f12] shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-pulse"
-              : "border-red-900/40 hover:border-red-600/60"
-          }`}
+          className={`relative bg-gradient-to-br from-red-950/40 via-slate-900 to-fantasy-slate-900 border transition-all duration-300 rounded-2xl p-4 flex flex-col justify-between active:scale-[0.97] cursor-pointer overflow-hidden shadow-lg shadow-red-950/20 ${char.hp.current <= char.hp.max * 0.4
+            ? "border-red-550/80 bg-gradient-to-b from-[#2a0505] to-[#0d0f12] shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-pulse"
+            : "border-red-900/40 hover:border-red-600/60"
+            }`}
         >
           {/* Subtle Heart Background */}
           <div className="absolute right-2 bottom-1 opacity-[0.08] pointer-events-none">
@@ -203,11 +225,10 @@ export default function CombatTab({
             {/* HP Progress Bar */}
             <div className={`w-full bg-fantasy-slate-950 rounded-full h-2 mt-2 overflow-hidden border ${char.hp.current <= char.hp.max * 0.4 ? "border-red-800/80" : "border-red-900/30"}`}>
               <div
-                className={`h-full rounded-full transition-all duration-300 ${
-                  char.hp.current <= char.hp.max * 0.4
-                    ? "bg-gradient-to-r from-red-950 to-red-500 blood-pulse-btn"
-                    : "bg-gradient-to-r from-red-700 via-rose-500 to-red-400"
-                }`}
+                className={`h-full rounded-full transition-all duration-300 ${char.hp.current <= char.hp.max * 0.4
+                  ? "bg-gradient-to-r from-red-950 to-red-500 blood-pulse-btn"
+                  : "bg-gradient-to-r from-red-700 via-rose-500 to-red-400"
+                  }`}
                 style={{ width: `${(char.hp.current / char.hp.max) * 100}%` }}
               />
             </div>
@@ -279,11 +300,10 @@ export default function CombatTab({
         </div>
 
         {/* Bênção de Sangue Toggle Banner */}
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 border rounded-2xl gap-2.5 transition-all ${
-          blessingActive
-            ? "bg-red-950/40 border-red-600 shadow-[0_0_12px_rgba(220,38,38,0.2)]"
-            : "bg-red-950/20 border-red-900/40"
-        }`}>
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 border rounded-2xl gap-2.5 transition-all ${blessingActive
+          ? "bg-red-950/40 border-red-600 shadow-[0_0_12px_rgba(220,38,38,0.2)]"
+          : "bg-red-950/20 border-red-900/40"
+          }`}>
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${blessingActive ? "bg-red-400 opacity-75" : "bg-transparent"}`}></span>
@@ -293,7 +313,7 @@ export default function CombatTab({
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-red-300 font-mono">Bênção de Sangue (Canalizar Divindade)</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-red-950 text-red-400 border border-red-900/40 rounded font-semibold">
-                  {blessingActive ? "EFEITO ATIVO (1 MIN)" : `Usos: ${channelDivinity.current}/${channelDivinity.max}`}
+                  {blessingActive ? "EFEITO ATIVO (1 MIN)" : `Usos: ${channelDivinity.current}/${channelDivinity.max}${hasDevoutAmulet && !char.devoutAmuletUsed ? " (+1 🔮)" : ""}`}
                 </span>
               </div>
               <span className="text-[10px] text-gray-300 block leading-tight mt-0.5">
@@ -304,12 +324,11 @@ export default function CombatTab({
           <div className="flex items-center gap-2 self-end sm:self-auto">
             <button
               type="button"
-              onClick={handleToggleBlessing}
-              className={`px-3.5 py-1.5 text-[10px] font-extrabold font-mono rounded-xl transition-all border shadow ${
-                blessingActive
-                  ? "bg-red-600 hover:bg-red-500 text-white border-red-400 shadow-red-950"
-                  : "bg-fantasy-slate-750 text-gray-300 border-fantasy-slate-700 hover:text-white hover:bg-fantasy-slate-700"
-              }`}
+              onClick={() => handleChannelDivinity("bless")}
+              className={`px-3.5 py-1.5 text-[10px] font-extrabold font-mono rounded-xl transition-all border shadow ${blessingActive
+                ? "bg-red-600 hover:bg-red-500 text-white border-red-400 shadow-red-950"
+                : "bg-fantasy-slate-750 text-gray-300 border-fantasy-slate-700 hover:text-white hover:bg-fantasy-slate-700"
+                }`}
             >
               {blessingActive ? "DESATIVAR (+4)" : "ATIVAR BÊNÇÃO"}
             </button>
@@ -317,11 +336,10 @@ export default function CombatTab({
         </div>
 
         {/* Marca do Caçador Active Indicator Banner */}
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 border rounded-2xl gap-2.5 transition-all ${
-          char.huntersMarkActive
-            ? "bg-amber-950/35 border-amber-500/70 shadow-[0_0_12px_rgba(245,158,11,0.2)]"
-            : "bg-fantasy-slate-900/40 border-fantasy-slate-800/80"
-        }`}>
+        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 border rounded-2xl gap-2.5 transition-all ${char.huntersMarkActive
+          ? "bg-amber-950/35 border-amber-500/70 shadow-[0_0_12px_rgba(245,158,11,0.2)]"
+          : "bg-fantasy-slate-900/40 border-fantasy-slate-800/80"
+          }`}>
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${char.huntersMarkActive ? "bg-amber-400 opacity-75" : "bg-transparent"}`}></span>
@@ -333,11 +351,10 @@ export default function CombatTab({
                   <Crosshair className="w-3.5 h-3.5 text-amber-400" />
                   Marca do Caçador (Hunter's Mark)
                 </span>
-                <span className={`text-[9px] font-mono px-2 py-0.5 rounded font-extrabold uppercase border ${
-                  char.huntersMarkActive
-                    ? "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse"
-                    : "bg-fantasy-slate-800 text-gray-400 border-fantasy-slate-700"
-                }`}>
+                <span className={`text-[9px] font-mono px-2 py-0.5 rounded font-extrabold uppercase border ${char.huntersMarkActive
+                  ? "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse"
+                  : "bg-fantasy-slate-800 text-gray-400 border-fantasy-slate-700"
+                  }`}>
                   {char.huntersMarkActive ? "🎯 ATIVA (CONCENTRAÇÃO)" : "INATIVA"}
                 </span>
               </div>
@@ -416,8 +433,8 @@ export default function CombatTab({
               notes: blessingActive
                 ? `✨ Bênção de Sangue Ativa! (+4 para acertar)${char.huntersMarkActive ? " • 🎯 +1d6 Marca do Caçador" : ""}`
                 : char.huntersMarkActive
-                ? "🎯 +1d6 de dano extra da Marca do Caçador no acerto."
-                : "Seu ataque padrão de haste de duas mãos."
+                  ? "🎯 +1d6 de dano extra da Marca do Caçador no acerto."
+                  : "Seu ataque padrão de haste de duas mãos."
             },
             {
               name: "Alabarda (Cabo - Ação Bônus)",
@@ -430,17 +447,16 @@ export default function CombatTab({
               notes: blessingActive
                 ? `✨ Bênção de Sangue Ativa! (+4 no acerto)${char.huntersMarkActive ? " • 🎯 +1d6 Marca do Caçador" : ""}`
                 : char.huntersMarkActive
-                ? "🎯 +1d6 de dano extra da Marca do Caçador no acerto."
-                : "Ataque rápido com a ponta oposta da haste."
+                  ? "🎯 +1d6 de dano extra da Marca do Caçador no acerto."
+                  : "Ataque rápido com a ponta oposta da haste."
             }
           ].map((wpn, idx) => (
             <div
               key={idx}
-              className={`p-3.5 bg-fantasy-slate-900/60 border rounded-2xl space-y-2.5 transition-all hover:bg-fantasy-slate-900/80 ${
-                blessingActive
-                  ? "border-red-900/80 bg-red-950/15 shadow-[0_0_12px_rgba(239,68,68,0.15)]"
-                  : "border-fantasy-slate-755"
-              }`}
+              className={`p-3.5 bg-fantasy-slate-900/60 border rounded-2xl space-y-2.5 transition-all hover:bg-fantasy-slate-900/80 ${blessingActive
+                ? "border-red-900/80 bg-red-950/15 shadow-[0_0_12px_rgba(239,68,68,0.15)]"
+                : "border-fantasy-slate-755"
+                }`}
             >
               <div className="flex justify-between items-start gap-2">
                 <div>
@@ -496,21 +512,19 @@ export default function CombatTab({
             <div className="flex bg-fantasy-slate-800 border border-red-950/40 p-0.5 rounded-xl self-end sm:self-auto">
               <button
                 onClick={() => setSmiteSlot(1)}
-                className={`text-xs px-2.5 py-1 rounded-lg font-mono font-bold transition-all ${
-                  smiteSlot === 1
-                    ? "bg-fantasy-crimson text-white shadow shadow-red-950/50"
-                    : "text-gray-400"
-                }`}
+                className={`text-xs px-2.5 py-1 rounded-lg font-mono font-bold transition-all ${smiteSlot === 1
+                  ? "bg-fantasy-crimson text-white shadow shadow-red-950/50"
+                  : "text-gray-400"
+                  }`}
               >
                 1º Nív
               </button>
               <button
                 onClick={() => setSmiteSlot(2)}
-                className={`text-xs px-2.5 py-1 rounded-lg font-mono font-bold transition-all ${
-                  smiteSlot === 2
-                    ? "bg-fantasy-crimson text-white shadow shadow-red-950/50"
-                    : "text-gray-400"
-                }`}
+                className={`text-xs px-2.5 py-1 rounded-lg font-mono font-bold transition-all ${smiteSlot === 2
+                  ? "bg-fantasy-crimson text-white shadow shadow-red-950/50"
+                  : "text-gray-400"
+                  }`}
               >
                 2º Nív
               </button>
@@ -568,7 +582,7 @@ export default function CombatTab({
               max={char.layOnHands.current}
               className="flex-1 bg-fantasy-slate-800 border border-fantasy-slate-700/80 rounded-xl py-2.5 px-3 text-center text-sm font-mono text-white focus:outline-none focus:border-emerald-500"
             />
-            
+
             <div className="flex gap-2">
               <button
                 type="button"
@@ -658,11 +672,10 @@ export default function CombatTab({
                 <button
                   type="button"
                   onClick={() => onToggleDevoutAmulet?.(!char.devoutAmuletUsed)}
-                  className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border transition-all ${
-                    char.devoutAmuletUsed
-                      ? "bg-gray-800/80 text-gray-400 border-gray-700"
-                      : "bg-fantasy-gold/20 text-fantasy-gold border-fantasy-gold/40 shadow-[0_0_8px_rgba(245,158,11,0.2)] animate-pulse"
-                  }`}
+                  className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border transition-all ${char.devoutAmuletUsed
+                    ? "bg-gray-800/80 text-gray-400 border-gray-700"
+                    : "bg-fantasy-gold/20 text-fantasy-gold border-fantasy-gold/40 shadow-[0_0_8px_rgba(245,158,11,0.2)] animate-pulse"
+                    }`}
                   title="Uso gratuito concedido pelo Amuleto do Devoto (1 por dia até o amanhecer)"
                 >
                   🔮 Amuleto: {char.devoutAmuletUsed ? "Usado ✖" : "Disponível (1/1) ✓"}
@@ -720,20 +733,18 @@ export default function CombatTab({
             </div>
 
             {/* Option 2: Bênção de Sangue */}
-            <div className={`p-3.5 bg-fantasy-slate-900/80 border rounded-xl space-y-2.5 flex flex-col justify-between transition-all ${
-              blessingActive ? "border-red-600 shadow-[0_0_12px_rgba(220,38,38,0.25)] bg-red-950/20" : "border-red-900/40 hover:border-red-800/60"
-            }`}>
+            <div className={`p-3.5 bg-fantasy-slate-900/80 border rounded-xl space-y-2.5 flex flex-col justify-between transition-all ${blessingActive ? "border-red-600 shadow-[0_0_12px_rgba(220,38,38,0.25)] bg-red-950/20" : "border-red-900/40 hover:border-red-800/60"
+              }`}>
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold font-mono text-red-300 flex items-center gap-1.5">
                     <Droplets className="w-3.5 h-3.5 text-red-500 fill-red-500/30" />
                     Bênção de Sangue
                   </span>
-                  <span className={`text-[9px] font-mono px-2 py-0.5 rounded font-semibold uppercase border ${
-                    blessingActive
-                      ? "bg-red-600 text-white border-red-400 animate-pulse"
-                      : "bg-red-950 text-red-400 border-red-900/50"
-                  }`}>
+                  <span className={`text-[9px] font-mono px-2 py-0.5 rounded font-semibold uppercase border ${blessingActive
+                    ? "bg-red-600 text-white border-red-400 animate-pulse"
+                    : "bg-red-950 text-red-400 border-red-900/50"
+                    }`}>
                     {blessingActive ? "🔥 ATIVO (+4)" : "Ação • 1 min"}
                   </span>
                 </div>
@@ -754,11 +765,10 @@ export default function CombatTab({
                 <button
                   type="button"
                   onClick={() => handleChannelDivinity("bless")}
-                  className={`px-3 py-1.5 font-mono font-bold text-xs rounded-lg active:scale-95 transition-all shadow border ${
-                    blessingActive
-                      ? "bg-red-600 hover:bg-red-500 text-white border-red-400 shadow-red-950"
-                      : "bg-red-950/70 hover:bg-red-900/80 border border-red-700/60 text-red-100"
-                  }`}
+                  className={`px-3 py-1.5 font-mono font-bold text-xs rounded-lg active:scale-95 transition-all shadow border ${blessingActive
+                    ? "bg-red-600 hover:bg-red-500 text-white border-red-400 shadow-red-950"
+                    : "bg-red-950/70 hover:bg-red-900/80 border border-red-700/60 text-red-100"
+                    }`}
                 >
                   {blessingActive ? "DESATIVAR" : "🩸 Ativar"}
                 </button>
@@ -966,7 +976,7 @@ export default function CombatTab({
             {/* Abilities */}
             <div className="p-3.5 bg-fantasy-slate-900/60 border border-fantasy-slate-755 rounded-2xl space-y-3">
               <span className="text-[9px] font-mono font-bold text-fantasy-gold uppercase tracking-widest block">Habilidades Especiais</span>
-              
+
               <div className="space-y-2 text-xs">
                 <div className="border-b border-fantasy-slate-800 pb-2">
                   <strong className="text-red-400 font-display block mb-0.5">Vínculo de Sangue (Telepatia)</strong>
