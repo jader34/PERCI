@@ -400,26 +400,26 @@ export default function App() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[45%] bg-amber-950/60 rounded-full blur-[130px]" />
       </div>
 
-      {/* 1. STICKY HEADER FIXED ON TOP */}
-      <header className="sticky top-0 z-45 bg-gradient-to-r from-red-950/70 via-slate-900/90 to-purple-950/50 backdrop-blur-2xl border-b border-red-900/40 p-3.5 shadow-xl shadow-red-950/20 flex flex-col gap-3">
+      {/* 1. STICKY HEADER FIXED ON TOP (COMPACT HEIGHT) */}
+      <header className="sticky top-0 z-45 bg-gradient-to-r from-red-950/80 via-slate-900/95 to-purple-950/60 backdrop-blur-2xl border-b border-red-900/40 px-3.5 py-1.5 sm:py-2 shadow-lg shadow-red-950/20">
         <div className="flex justify-between items-center gap-2">
           {/* Character Badge ID */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fantasy-gold via-red-600 to-fantasy-crimson p-[1.5px] shadow-lg shadow-red-950/50 flex items-center justify-center font-display text-lg text-white">
-              <span className="blood-glow-text filter drop-shadow">⚔️</span>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-fantasy-gold via-red-600 to-fantasy-crimson p-[1px] shadow-md shadow-red-950/40 flex items-center justify-center font-display text-sm text-white shrink-0">
+              <span className="blood-glow-text filter drop-shadow leading-none">⚔️</span>
             </div>
             <div>
-              <h1 className="text-sm font-extrabold font-display leading-tight tracking-wider text-fantasy-gold flex items-center gap-1.5 break-words">
+              <h1 className="text-xs sm:text-sm font-extrabold font-display leading-tight tracking-wider text-fantasy-gold flex items-center gap-1.5">
                 {characterData.name}
               </h1>
-              <span className="text-[9px] uppercase font-mono tracking-wider text-red-200/80 block mt-0.5">
+              <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider text-red-200/80 block leading-none mt-0.5">
                 {characterData.class} • Nível {characterData.level}
               </span>
             </div>
           </div>
 
           {/* Long Rest & Database Status Indicators */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Sync Cloud Indicator */}
             {isFirebaseConfigured && (
               <span className="flex h-2 w-2 relative mr-0.5" title="Sincronizado com Nuvem (Firebase)">
@@ -430,10 +430,10 @@ export default function App() {
             
             <button
               onClick={() => setShowLongRestConfirm(true)}
-              className="px-3 py-1.5 bg-gradient-to-r from-red-900 via-red-800 to-purple-950 active:scale-95 text-white text-[10px] font-bold font-mono tracking-widest rounded-xl border border-red-500/30 hover:border-red-400/60 shadow-md shadow-red-950/50 flex items-center gap-1.5 transition-all uppercase"
+              className="px-2.5 py-1 bg-gradient-to-r from-red-900 via-red-800 to-purple-950 active:scale-95 text-white text-[9px] sm:text-[10px] font-bold font-mono tracking-wider rounded-lg border border-red-500/30 hover:border-red-400/60 shadow-md shadow-red-950/40 flex items-center gap-1 transition-all uppercase"
               title="Descanso Longo"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-red-300" />
+              <RotateCcw className="w-3 h-3 text-red-300" />
               REST
             </button>
           </div>

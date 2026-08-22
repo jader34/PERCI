@@ -214,7 +214,7 @@ export default function CombatTab({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pb-28 pt-3 space-y-4">
+    <div className="flex-1 overflow-y-auto custom-scrollbar px-3 sm:px-4 pb-28 pt-2.5 space-y-3.5 sm:space-y-4">
       {/* 1. TOP DASHBOARD: HP, AC, STATS & SPELL SLOTS */}
       <div className="space-y-2.5">
         <div className="grid grid-cols-2 gap-3">
@@ -358,50 +358,53 @@ export default function CombatTab({
       )}
 
       {/* 3. SUB-TAB SELECTOR (AÇÕES / AÇÕES BÔNUS / REAÇÕES & MONTARIA) */}
-      <div className="flex p-1 bg-fantasy-slate-950/90 rounded-2xl border border-red-900/40 backdrop-blur-md shadow-lg sticky top-0 z-30">
+      <div className="grid grid-cols-3 gap-1.5 p-1.5 bg-fantasy-slate-950/90 rounded-2xl border border-red-900/40 backdrop-blur-md shadow-xl sticky top-0 z-30">
         <button
           type="button"
           onClick={() => setCombatSubTab("actions")}
-          className={`flex-1 py-2.5 px-2 rounded-xl font-mono text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all ${
+          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] ${
             combatSubTab === "actions"
-              ? "bg-gradient-to-r from-red-700 via-rose-600 to-red-800 text-white shadow-lg shadow-red-950/60 border border-red-400/40"
-              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800"
+              ? "bg-gradient-to-r from-red-700 via-rose-600 to-red-800 text-white shadow-lg shadow-red-950/80 border border-red-400/50 ring-1 ring-red-400/30"
+              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800/80 border border-transparent"
           }`}
         >
-          <Swords className="w-4 h-4 text-red-200" />
-          <span>AÇÕES (1x)</span>
-          <span className="text-[9px] bg-red-950/80 px-1.5 py-0.2 rounded-full border border-red-400/30">
-            Ataque 2x
-          </span>
+          <Swords className={`w-4 h-4 shrink-0 ${combatSubTab === "actions" ? "text-white animate-pulse" : "text-red-400/80"}`} />
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1 leading-tight">
+            <span className="text-[11px] sm:text-xs font-extrabold tracking-tight">Ações</span>
+            <span className={`text-[8px] sm:text-[9px] font-mono ${combatSubTab === "actions" ? "text-red-100/90" : "text-gray-500"}`}>2 Golpes</span>
+          </div>
         </button>
 
         <button
           type="button"
           onClick={() => setCombatSubTab("bonus")}
-          className={`flex-1 py-2.5 px-2 rounded-xl font-mono text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all ${
+          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] ${
             combatSubTab === "bonus"
-              ? "bg-gradient-to-r from-amber-600 via-amber-500 to-orange-600 text-slate-950 shadow-lg shadow-amber-950/50 border border-amber-300/60"
-              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800"
+              ? "bg-gradient-to-r from-amber-600 via-amber-500 to-orange-600 text-slate-950 shadow-lg shadow-amber-950/80 border border-amber-300/60 ring-1 ring-amber-300/40"
+              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800/80 border border-transparent"
           }`}
         >
-          <Zap className="w-4 h-4 text-amber-300" />
-          <span>AÇÕES BÔNUS</span>
-          <span className="text-[9px] bg-amber-950/40 px-1.5 py-0.2 rounded-full border border-amber-500/40 text-amber-300">
-            Haste & Marca
-          </span>
+          <Zap className={`w-4 h-4 shrink-0 ${combatSubTab === "bonus" ? "text-slate-950 fill-slate-950" : "text-amber-400"}`} />
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1 leading-tight">
+            <span className="text-[11px] sm:text-xs font-extrabold tracking-tight">Bônus</span>
+            <span className={`text-[8px] sm:text-[9px] font-mono ${combatSubTab === "bonus" ? "text-amber-950/80 font-bold" : "text-gray-500"}`}>Haste/Véu</span>
+          </div>
         </button>
 
         <button
           type="button"
           onClick={() => setCombatSubTab("reactions_steed")}
-          className={`py-2.5 px-3 rounded-xl font-mono text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all ${
+          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] ${
             combatSubTab === "reactions_steed"
-              ? "bg-gradient-to-r from-purple-800 via-purple-700 to-indigo-900 text-white shadow-lg shadow-purple-950/60 border border-purple-400/40"
-              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800"
+              ? "bg-gradient-to-r from-purple-800 via-purple-700 to-indigo-900 text-white shadow-lg shadow-purple-950/80 border border-purple-400/50 ring-1 ring-purple-400/30"
+              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800/80 border border-transparent"
           }`}
         >
-          <Shield className="w-3.5 h-3.5 text-purple-300" />
-          <span>REAÇÃO / 🐎</span>
+          <Shield className={`w-4 h-4 shrink-0 ${combatSubTab === "reactions_steed" ? "text-purple-200" : "text-purple-400/80"}`} />
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1 leading-tight">
+            <span className="text-[11px] sm:text-xs font-extrabold tracking-tight">Reações</span>
+            <span className={`text-[8px] sm:text-[9px] font-mono ${combatSubTab === "reactions_steed" ? "text-purple-200/90" : "text-gray-500"}`}>🐎 Montaria</span>
+          </div>
         </button>
       </div>
 
