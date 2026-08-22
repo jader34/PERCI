@@ -251,6 +251,15 @@ export const defaultCharacterData: CharacterData = {
       equipped: true
     },
     {
+      id: "i9",
+      name: "Manto do Véu de Sangue",
+      quantity: 1,
+      description: "Manto mágico escarlate. Como uma ação bônus, você pode fazer com que o manto exale uma névoa de sangue por 1 minuto, concedendo a você e a seus aliados meio cobrir (+2 CA e +2 em testes de salvaguarda de Destreza) enquanto estiverem a 1,5m de você. Pode ser usado 1 vez por descanso longo.",
+      weight: 1.5,
+      isMagical: true,
+      equipped: true
+    },
+    {
       id: "i6",
       name: "Poção de Cura Maior",
       quantity: 2,
@@ -333,11 +342,18 @@ export const defaultCharacterData: CharacterData = {
       description: "Item maravilhoso, incomum (+1) (requer sintonização por clérigo ou paladino). Concede +1 nas jogadas de ataque de feitiço e +1 na CD dos testes de resistência das suas magias. Permite usar Canalizar Divindade 1 vez por dia sem gastar um dos usos do recurso (recarrega ao amanhecer)."
     },
     {
+      id: "f10",
+      name: "Véu de Sangue (Manto Mágico)",
+      source: "Item Mágico Equipado",
+      description: "Como uma ação bônus, você pode fazer com que o manto exale uma névoa de sangue por 1 minuto, concedendo a você e a seus aliados meio cobrir (+2 CA e +2 salvaguardas de Destreza) enquanto estiverem a 1,5m de você. Esta habilidade pode ser usada uma vez por descanso longo."
+    },
+    {
       id: "f7",
       name: "Aura de Proteção (Aura of Protection)",
       source: "Classe - Paladino Nív 6 (Quase lá!)",
       description: "Você e aliados amigáveis dentro de 3 metros ganham um bônus igual ao seu modificador de Carisma (+4) em todas as jogadas de salvamento."
     }
   ],
-  notes: "Percival é conhecido como 'O Triturador' e agora segue o Juramento da Vingança/Sangue. Possui um forte vínculo infernal com seu Pesadelo Sanguinário."
+  notes: "Percival é conhecido como 'O Triturador' e agora segue o Juramento da Vingança/Sangue. Possui um forte vínculo infernal com seu Pesadelo Sanguinário.",
+  bloodVeilUsed: false
 };

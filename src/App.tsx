@@ -94,6 +94,19 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
       });
     }
 
+    const hasBloodVeilItem = updated.inventory.some((i) => i.name.toLowerCase().includes("véu de sangue") || i.name.toLowerCase().includes("veu de sangue"));
+    if (!hasBloodVeilItem) {
+      updated.inventory.push({
+        id: "i9",
+        name: "Manto do Véu de Sangue",
+        quantity: 1,
+        description: "Manto mágico escarlate. Como uma ação bônus, você pode fazer com que o manto exale uma névoa de sangue por 1 minuto, concedendo a você e a seus aliados meio cobrir (+2 CA e +2 em testes de salvaguarda de Destreza) enquanto estiverem a 1,5m de você. Pode ser usado 1 vez por descanso longo.",
+        weight: 1.5,
+        isMagical: true,
+        equipped: true
+      });
+    }
+
     if (itemUpdated || updated.ac === 17) {
       const hasPlate = updated.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("placa"));
       const hasShield = updated.inventory.some((i) => i.equipped && i.name.toLowerCase().includes("escudo"));
@@ -108,6 +121,14 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
     const devoutFeat = defaultCharacterData.features.find((f) => f.id === "f9");
     if (devoutFeat) {
       updated.features.push(devoutFeat);
+    }
+  }
+
+  const hasBloodVeilFeat = updated.features.some((f) => f.name.toLowerCase().includes("véu de sangue") || f.name.toLowerCase().includes("veu de sangue"));
+  if (!hasBloodVeilFeat) {
+    const bloodVeilFeat = defaultCharacterData.features.find((f) => f.id === "f10");
+    if (bloodVeilFeat) {
+      updated.features.push(bloodVeilFeat);
     }
   }
 
@@ -257,6 +278,13 @@ export default function App() {
     }));
   };
 
+  const handleToggleBloodVeil = (used?: boolean) => {
+    saveCharacterData((prev) => ({
+      ...prev,
+      bloodVeilUsed: used !== undefined ? used : !prev.bloodVeilUsed
+    }));
+  };
+
   const handleUpdateInventory = (inventory: InventoryItem[]) => {
     // If equipment changes, let's optionally recalculate armor class (CA)!
     // Example: Placa adds 18. Escudo adds 2.
@@ -356,6 +384,9 @@ export default function App() {
     // 7. Recharge Amuleto do Devoto free Channel Divinity use
     updated.devoutAmuletUsed = false;
 
+    // 8. Recharge Manto do Véu de Sangue daily use
+    updated.bloodVeilUsed = false;
+
     saveCharacterData(updated);
     setShowLongRestConfirm(false);
   };
@@ -429,6 +460,7 @@ export default function App() {
                 onUseSpellSlot={handleUseSpellSlot}
                 onToggleHuntersMark={handleToggleHuntersMark}
                 onToggleDevoutAmulet={handleToggleDevoutAmulet}
+                onToggleBloodVeil={handleToggleBloodVeil}
               />
             )}
             {activeTab === "features" && (

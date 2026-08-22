@@ -115,4 +115,6 @@ export interface CharacterData {
   notes: string;
   huntersMarkActive?: boolean;
   devoutAmuletUsed?: boolean;
+  bloodVeilUsed?: boolean;
+  bloodVeilActive?: boolean;
 }
