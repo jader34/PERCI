@@ -25,11 +25,47 @@ html, body, #root {
   color: #f1f5f9;
   font-family: var(--font-sans);
   height: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
   overflow: hidden;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   user-select: none;
+}
+
+input, textarea {
+  user-select: text;
+  caret-color: #f59e0b;
+}
+
+::selection {
+  background-color: rgba(153, 0, 0, 0.45);
+  color: #fcd34d;
+}
+
+input:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.4);
+}
+
+.font-mono {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Safe area insets for mobile notches and bottom gesture bars */
+.safe-top {
+  padding-top: max(0.5rem, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+.safe-left {
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+}
+.safe-right {
+  padding-right: max(0.75rem, env(safe-area-inset-right));
 }
 
 /* Glassmorphism custom classes applied automatically to container utility triggers */

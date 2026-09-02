@@ -95,14 +95,14 @@ export default function FeaturesTab({
           </h4>
           <button
             onClick={() => setEditingAttributes(!editingAttributes)}
-            className="text-xs py-1 px-3 bg-fantasy-slate-750 hover:bg-fantasy-slate-700 border border-fantasy-slate-700/60 transition-colors text-white font-semibold rounded-xl font-mono flex items-center gap-1.5"
+            className="text-xs py-1.5 px-3.5 bg-fantasy-slate-750 hover:bg-fantasy-slate-700 border border-fantasy-slate-700/60 transition-colors text-white font-semibold rounded-xl font-mono flex items-center gap-1.5 min-h-[36px] touch-manipulation active:scale-95"
           >
             <Edit3 className="w-3.5 h-3.5" />
             {editingAttributes ? "Pronto" : "Editar"}
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
           {(Object.keys(char.attributes) as Array<keyof CharacterData["attributes"]>).map((key) => {
             const attr = char.attributes[key];
             const modVal = mods[key];
@@ -115,11 +115,11 @@ export default function FeaturesTab({
                 <button
                   onClick={() => handleToggleAttributeProf(key)}
                   disabled={!editingAttributes}
-                  className={`absolute top-1.5 right-1.5 p-1 rounded-md transition-all ${
+                  className={`absolute top-1 right-1 p-1.5 rounded-lg transition-all min-w-[30px] min-h-[30px] flex items-center justify-center ${
                     attr.proficient
                       ? "text-fantasy-gold-light"
                       : "text-gray-600 hover:text-gray-400"
-                  } disabled:pointer-events-none`}
+                  } disabled:pointer-events-none touch-manipulation`}
                   title="Proficiência em Salvatagem"
                 >
                   <svg
@@ -127,7 +127,7 @@ export default function FeaturesTab({
                     fill={attr.proficient ? "currentColor" : "none"}
                     viewBox="0 0 24 24"
                     strokeWidth={2}
-                    className="w-3.5 h-3.5 stroke-current"
+                    className="w-4 h-4 stroke-current"
                   >
                     <path
                       strokeLinecap="round"
@@ -144,7 +144,7 @@ export default function FeaturesTab({
 
                 {/* Static reference display for the Attribute Modifier (Salvaguarda) */}
                 <div
-                  className={`my-1 py-1.5 px-2.5 border rounded-xl flex flex-col justify-center items-center w-full shadow-inner select-none transition-all ${
+                  className={`my-1 py-1.5 px-2 border rounded-xl flex flex-col justify-center items-center w-full shadow-inner select-none transition-all ${
                     attr.proficient
                       ? "bg-red-950/20 border-red-900/60"
                       : "bg-fantasy-slate-800 border-fantasy-slate-700/60"
@@ -160,19 +160,21 @@ export default function FeaturesTab({
 
                 {/* Score value +/- controls or display */}
                 {editingAttributes ? (
-                  <div className="flex items-center gap-1.5 mt-0.5">
+                  <div className="flex items-center justify-center gap-1.5 mt-0.5 w-full">
                     <button
                       onClick={() => handleAttributeChange(key, -1)}
-                      className="w-5 h-5 bg-fantasy-slate-700 active:bg-fantasy-slate-600 text-gray-200 text-xs rounded-full flex items-center justify-center font-bold"
+                      className="w-7 h-7 bg-fantasy-slate-700 active:bg-fantasy-slate-600 text-gray-200 text-sm rounded-lg flex items-center justify-center font-bold active:scale-95 touch-manipulation"
+                      aria-label="Diminuir"
                     >
                       -
                     </button>
-                    <span className="text-xs font-bold font-mono text-white">
+                    <span className="text-xs font-bold font-mono text-white min-w-[20px] text-center">
                       {attr.value}
                     </span>
                     <button
                       onClick={() => handleAttributeChange(key, 1)}
-                      className="w-5 h-5 bg-fantasy-slate-700 active:bg-fantasy-slate-600 text-gray-200 text-xs rounded-full flex items-center justify-center font-bold"
+                      className="w-7 h-7 bg-fantasy-slate-700 active:bg-fantasy-slate-600 text-gray-200 text-sm rounded-lg flex items-center justify-center font-bold active:scale-95 touch-manipulation"
+                      aria-label="Aumentar"
                     >
                       +
                     </button>
@@ -208,21 +210,21 @@ export default function FeaturesTab({
             return (
               <div
                 key={skill.name}
-                className="px-3.5 py-2.5 flex items-center justify-between hover:bg-fantasy-slate-850/40 transition-colors"
+                className="px-3.5 py-3 flex items-center justify-between hover:bg-fantasy-slate-850/40 transition-colors"
                 id={`skill-${skill.name.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className="flex items-center gap-3">
                   {/* Skill proficiency check indicator */}
                   <button
                     onClick={() => handleToggleSkillProf(skill.name)}
-                    className={`p-1 rounded transition-colors ${
+                    className={`p-1.5 rounded-lg transition-colors min-w-[34px] min-h-[34px] flex items-center justify-center touch-manipulation ${
                       hasProf ? "text-fantasy-crimson-light" : "text-gray-600 hover:text-gray-400"
                     }`}
                   >
                     {hasProf ? (
-                      <CheckCircle2 className="w-4 h-4 fill-fantasy-crimson/20" />
+                      <CheckCircle2 className="w-5 h-5 fill-fantasy-crimson/20" />
                     ) : (
-                      <Circle className="w-4 h-4" />
+                      <Circle className="w-5 h-5" />
                     )}
                   </button>
 
@@ -238,7 +240,7 @@ export default function FeaturesTab({
 
                 {/* Static skill mod badge */}
                 <div
-                  className={`py-1 px-3 border rounded-xl font-mono text-xs font-bold ${
+                  className={`py-1.5 px-3 border rounded-xl font-mono text-xs font-bold ${
                     hasProf 
                       ? "bg-red-950/25 border-red-900/40 text-fantasy-crimson-light shadow-[inset_0_0_8px_rgba(239,68,68,0.1)]" 
                       : "bg-fantasy-slate-800 border-fantasy-slate-700/50 text-gray-300"

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sparkles, ShieldCheck, CircleDot, Circle, Plus, Trash2, CheckCircle, Info, BookOpen, Flame, HelpCircle } from "lucide-react";
+import { Sparkles, ShieldCheck, CircleDot, Circle, Plus, Trash2, CheckCircle, Info, BookOpen, Flame, HelpCircle, AlertTriangle } from "lucide-react";
 import { CharacterData, Spell, SpellSlots } from "../types";
 import { allPaladinSpells, oathSpells } from "../lib/allPaladinSpells";
 
@@ -104,7 +104,7 @@ export default function SpellsTab({
         let msg = `Magia "${spell.name}" conjurada! Espaço de magia consumido na ficha.`;
         if (spell.name.toLowerCase().includes("caçador") || spell.name.toLowerCase().includes("hunter")) {
           onToggleHuntersMark?.(true);
-          msg = `🎯 Marca do Caçador conjurada! Efeito ativado e destacado na aba de Combate (+1d6 de dano por ataque).`;
+          msg = `Marca do Caçador conjurada! Efeito ativado e destacado na aba de Combate (+1d6 de dano por ataque).`;
         } else if (spell.name.toLowerCase().includes("curar")) {
           msg += ` Role 1d8 + ${chaMod} (+4) de cura divina.`;
         } else if (spell.name.toLowerCase().includes("destruição")) {
@@ -274,20 +274,20 @@ export default function SpellsTab({
                 {char.spellSlots.level1.current} / {char.spellSlots.level1.max} slots restantes
               </span>
             </div>
-            <div className="flex gap-2.5">
+            <div className="flex gap-1.5 sm:gap-2.5">
               {Array.from({ length: char.spellSlots.level1.max }).map((_, idx) => {
                 const isActive = idx < char.spellSlots.level1.current;
                 return (
                   <button
                     key={idx}
                     onClick={() => handleToggleSlotBubble("level1", idx)}
-                    className="p-1 active:scale-90 transition-transform focus:outline-none"
+                    className="p-1.5 min-w-[38px] min-h-[38px] flex items-center justify-center active:scale-90 transition-transform focus:outline-none touch-manipulation rounded-lg"
                     title={`Slot 1º Nível ${idx + 1}`}
                   >
                     {isActive ? (
-                      <CircleDot className="w-6 h-6 text-fantasy-crimson fill-fantasy-crimson/25 drop-shadow-[0_0_5px_rgba(239,68,68,0.4)]" />
+                      <CircleDot className="w-7 h-7 text-fantasy-crimson fill-fantasy-crimson/25 drop-shadow-[0_0_6px_rgba(239,68,68,0.5)] animate-pulse" />
                     ) : (
-                      <Circle className="w-6 h-6 text-gray-600 hover:text-gray-500" />
+                      <Circle className="w-7 h-7 text-gray-600 hover:text-gray-500" />
                     )}
                   </button>
                 );
@@ -303,20 +303,20 @@ export default function SpellsTab({
                 {char.spellSlots.level2.current} / {char.spellSlots.level2.max} slots restantes
               </span>
             </div>
-            <div className="flex gap-2.5">
+            <div className="flex gap-1.5 sm:gap-2.5">
               {Array.from({ length: char.spellSlots.level2.max }).map((_, idx) => {
                 const isActive = idx < char.spellSlots.level2.current;
                 return (
                   <button
                     key={idx}
                     onClick={() => handleToggleSlotBubble("level2", idx)}
-                    className="p-1 active:scale-90 transition-transform focus:outline-none"
+                    className="p-1.5 min-w-[38px] min-h-[38px] flex items-center justify-center active:scale-90 transition-transform focus:outline-none touch-manipulation rounded-lg"
                     title={`Slot 2º Nível ${idx + 1}`}
                   >
                     {isActive ? (
-                      <CircleDot className="w-6 h-6 text-fantasy-crimson fill-fantasy-crimson/25 drop-shadow-[0_0_5px_rgba(239,68,68,0.4)]" />
+                      <CircleDot className="w-7 h-7 text-fantasy-crimson fill-fantasy-crimson/25 drop-shadow-[0_0_6px_rgba(239,68,68,0.5)] animate-pulse" />
                     ) : (
-                      <Circle className="w-6 h-6 text-gray-600 hover:text-gray-500" />
+                      <Circle className="w-7 h-7 text-gray-600 hover:text-gray-500" />
                     )}
                   </button>
                 );
@@ -332,29 +332,29 @@ export default function SpellsTab({
       {/* TABS SELECTOR & CONTROL BAR */}
       <div className="space-y-4">
         {/* Outer Tabs container */}
-        <div className="bg-fantasy-slate-900/80 p-1.5 rounded-2xl border border-fantasy-slate-700/60 flex gap-2">
+        <div className="bg-fantasy-slate-900/80 p-1.5 rounded-2xl border border-fantasy-slate-700/60 flex gap-1.5">
           <button
             onClick={() => setActiveTab("prepared")}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold font-mono tracking-wide transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-2.5 sm:px-4 rounded-xl text-xs font-bold font-mono tracking-wide transition-all flex items-center justify-center gap-1.5 min-h-[44px] touch-manipulation active:scale-[0.98] ${
               activeTab === "prepared"
                 ? "bg-gradient-to-r from-red-900/60 to-fantasy-crimson text-white border border-red-500/20 shadow-md"
                 : "text-gray-400 hover:text-gray-300 hover:bg-fantasy-slate-800/40"
             }`}
           >
-            <ShieldCheck className="w-4 h-4" />
-            Magias Preparadas ({preparedClassCount} / {maxPrepared})
+            <ShieldCheck className="w-4 h-4 shrink-0" />
+            <span className="truncate">Preparadas ({preparedClassCount}/{maxPrepared})</span>
           </button>
           
           <button
             onClick={() => setActiveTab("all")}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold font-mono tracking-wide transition-all flex items-center justify-center gap-2 ${
+            className={`flex-1 py-2.5 px-2.5 sm:px-4 rounded-xl text-xs font-bold font-mono tracking-wide transition-all flex items-center justify-center gap-1.5 min-h-[44px] touch-manipulation active:scale-[0.98] ${
               activeTab === "all"
                 ? "bg-gradient-to-r from-red-900/60 to-fantasy-crimson text-white border border-red-500/20 shadow-md"
                 : "text-gray-400 hover:text-gray-300 hover:bg-fantasy-slate-800/40"
             }`}
           >
-            <BookOpen className="w-4 h-4" />
-            Todas as Magias ({completeClassList1st.length + completeClassList2nd.length})
+            <BookOpen className="w-4 h-4 shrink-0" />
+            <span className="truncate">Todas ({completeClassList1st.length + completeClassList2nd.length})</span>
           </button>
         </div>
 
@@ -569,8 +569,9 @@ export default function SpellsTab({
           <div className="space-y-6">
             {/* Limit Warning Badge */}
             {preparedClassCount > maxPrepared && (
-              <div className="p-3 bg-amber-950/40 border border-amber-600/30 text-amber-300 rounded-2xl text-[11px] font-semibold text-center">
-                ⚠️ Alerta: Você possui {preparedClassCount} magias de paladino preparadas, excedendo seu limite atual de {maxPrepared}! Considere desmarcar algumas.
+              <div className="p-3 bg-amber-950/40 border border-amber-600/30 text-amber-300 rounded-2xl text-[11px] font-semibold text-center flex items-center justify-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>Limite excedido: Você possui {preparedClassCount} magias preparadas (limite: {maxPrepared}). Considere desmarcar algumas.</span>
               </div>
             )}
 
@@ -684,25 +685,25 @@ function SpellCard({
           : "bg-fantasy-slate-900/30 border-fantasy-slate-800 opacity-60 hover:opacity-100 hover:border-fantasy-slate-700"
       }`}
     >
-      <div className="flex justify-between items-start gap-3">
-        <div className="flex items-start gap-2.5 flex-1 min-w-0">
+      <div className="flex justify-between items-start gap-2.5">
+        <div className="flex items-start gap-2 flex-1 min-w-0">
           {/* Visual preparation toggle button */}
           {actualIsOath ? (
-            <div className="p-1 mt-0.5" title="Magia de Juramento: Sempre Preparada">
-              <CheckCircle className="w-4 h-4 text-fantasy-gold fill-fantasy-gold/10" />
+            <div className="p-1.5 mt-0.5 min-w-[34px] min-h-[34px] flex items-center justify-center shrink-0" title="Magia de Juramento: Sempre Preparada">
+              <CheckCircle className="w-5 h-5 text-fantasy-gold fill-fantasy-gold/10" />
             </div>
           ) : (
             <button
               onClick={onTogglePrepared}
-              className={`p-1 mt-0.5 rounded transition-transform hover:scale-110 focus:outline-none ${
+              className={`p-1.5 mt-0.5 rounded-lg transition-transform active:scale-90 focus:outline-none min-w-[34px] min-h-[34px] flex items-center justify-center shrink-0 touch-manipulation ${
                 isPrepared ? "text-green-400" : "text-gray-600 hover:text-gray-400"
               }`}
               title={isPrepared ? "Despreparar Magia" : "Preparar Magia"}
             >
               {isPrepared ? (
-                <CheckCircle className="w-4 h-4 fill-green-500/10" />
+                <CheckCircle className="w-5 h-5 fill-green-500/10" />
               ) : (
-                <Circle className="w-4 h-4" />
+                <Circle className="w-5 h-5" />
               )}
             </button>
           )}
@@ -710,12 +711,12 @@ function SpellCard({
           {/* Interactive core text info */}
           <div onClick={() => setExpanded(!expanded)} className="cursor-pointer min-w-0 flex-1 select-none">
             <h5 className="font-bold text-gray-100 font-display text-sm leading-tight flex items-center gap-1.5 flex-wrap">
-              <span className="truncate">{spell.name}</span>
-              <span className="text-[9px] font-mono font-normal text-gray-400 bg-fantasy-slate-800/80 px-1.5 py-0.2 rounded">
+              <span>{spell.name}</span>
+              <span className="text-[9px] font-mono font-normal text-gray-400 bg-fantasy-slate-800/80 px-1.5 py-0.5 rounded">
                 {spell.school}
               </span>
               {actualIsOath && (
-                <span className="text-[8px] font-mono text-fantasy-gold bg-fantasy-gold/10 px-1.5 py-0.2 rounded font-extrabold uppercase tracking-wide border border-fantasy-gold/25">
+                <span className="text-[8px] font-mono text-fantasy-gold bg-fantasy-gold/10 px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wide border border-fantasy-gold/25">
                   Juramento
                 </span>
               )}
@@ -727,11 +728,11 @@ function SpellCard({
         </div>
 
         {/* Interactive right controls */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 shrink-0">
           <button
             onClick={() => onCast(spell)}
             disabled={!isPrepared}
-            className="py-1 px-3 bg-gradient-to-r from-red-800 to-red-650 hover:from-red-750 hover:to-red-600 disabled:bg-fantasy-slate-800 disabled:text-gray-650 disabled:pointer-events-none text-white font-bold font-mono text-[11px] rounded-lg active:scale-95 transition-all shadow border border-red-500/10"
+            className="py-1.5 px-3.5 bg-gradient-to-r from-red-800 to-red-650 hover:from-red-750 hover:to-red-600 disabled:bg-fantasy-slate-800 disabled:text-gray-650 disabled:pointer-events-none text-white font-bold font-mono text-xs rounded-xl active:scale-95 transition-all shadow border border-red-500/10 min-h-[36px] touch-manipulation flex items-center justify-center"
           >
             Conjurar
           </button>
@@ -739,10 +740,10 @@ function SpellCard({
           {onDelete && (
             <button
               onClick={onDelete}
-              className="p-1.5 text-gray-500 hover:text-fantasy-crimson rounded-md hover:bg-fantasy-slate-800 transition-colors"
+              className="p-2 text-gray-500 hover:text-fantasy-crimson rounded-lg hover:bg-fantasy-slate-800 transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
               title="Deletar Magia"
             >
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-4 h-4" />
             </button>
           )}
         </div>

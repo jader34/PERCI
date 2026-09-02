@@ -400,19 +400,21 @@ export default function App() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[45%] bg-amber-950/60 rounded-full blur-[130px]" />
       </div>
 
-      {/* 1. STICKY HEADER FIXED ON TOP (COMPACT HEIGHT) */}
-      <header className="sticky top-0 z-45 bg-gradient-to-r from-red-950/80 via-slate-900/95 to-purple-950/60 backdrop-blur-2xl border-b border-red-900/40 px-3.5 py-1.5 sm:py-2 shadow-lg shadow-red-950/20">
+      {/* 1. STICKY HEADER FIXED ON TOP (COMPACT HEIGHT WITH SAFE AREA) */}
+      <header className="sticky top-0 z-45 bg-gradient-to-r from-red-950/85 via-slate-900/95 to-purple-950/65 backdrop-blur-2xl border-b border-red-900/40 px-3.5 pt-2 pb-2 safe-top shadow-lg shadow-red-950/20">
         <div className="flex justify-between items-center gap-2">
           {/* Character Badge ID */}
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-fantasy-gold via-red-600 to-fantasy-crimson p-[1px] shadow-md shadow-red-950/40 flex items-center justify-center font-display text-sm text-white shrink-0">
-              <span className="blood-glow-text filter drop-shadow leading-none">⚔️</span>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-fantasy-gold via-red-600 to-fantasy-crimson p-[1px] shadow-md shadow-red-950/40 flex items-center justify-center shrink-0">
+              <div className="w-full h-full bg-fantasy-slate-900 rounded-[11px] flex items-center justify-center">
+                <Swords className="w-4 h-4 text-fantasy-gold-light" />
+              </div>
             </div>
             <div>
               <h1 className="text-xs sm:text-sm font-extrabold font-display leading-tight tracking-wider text-fantasy-gold flex items-center gap-1.5">
                 {characterData.name}
               </h1>
-              <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider text-red-200/80 block leading-none mt-0.5">
+              <span className="text-[9px] uppercase font-mono tracking-wider text-red-200/80 block leading-none mt-0.5">
                 {characterData.class} • Nível {characterData.level}
               </span>
             </div>
@@ -422,18 +424,18 @@ export default function App() {
           <div className="flex items-center gap-1.5 sm:gap-2">
             {/* Sync Cloud Indicator */}
             {isFirebaseConfigured && (
-              <span className="flex h-2 w-2 relative mr-0.5" title="Sincronizado com Nuvem (Firebase)">
+              <span className="flex h-2.5 w-2.5 relative mr-0.5" title="Sincronizado com Nuvem (Firebase)">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
             )}
             
             <button
               onClick={() => setShowLongRestConfirm(true)}
-              className="px-2.5 py-1 bg-gradient-to-r from-red-900 via-red-800 to-purple-950 active:scale-95 text-white text-[9px] sm:text-[10px] font-bold font-mono tracking-wider rounded-lg border border-red-500/30 hover:border-red-400/60 shadow-md shadow-red-950/40 flex items-center gap-1 transition-all uppercase"
+              className="px-3 py-1.5 bg-gradient-to-r from-red-900 via-red-800 to-purple-950 active:scale-95 text-white text-[10px] sm:text-[11px] font-bold font-mono tracking-wider rounded-xl border border-red-500/30 hover:border-red-400/60 shadow-md shadow-red-950/40 flex items-center gap-1.5 transition-all uppercase min-h-[36px]"
               title="Descanso Longo"
             >
-              <RotateCcw className="w-3 h-3 text-red-300" />
+              <RotateCcw className="w-3.5 h-3.5 text-red-300" />
               REST
             </button>
           </div>
@@ -492,72 +494,72 @@ export default function App() {
         </AnimatePresence>
       </div>
 
-      {/* 4. FIXED BOTTOM NAVIGATION MENU BAR */}
-      <nav className="sticky bottom-0 left-0 right-0 z-40 bg-slate-950/85 backdrop-blur-2xl border-t border-red-900/40 p-2 shadow-2xl shadow-red-950/30 flex justify-around items-center h-16">
+      {/* 4. FIXED BOTTOM NAVIGATION MENU BAR WITH SAFE-BOTTOM */}
+      <nav className="sticky bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-2xl border-t border-red-900/40 px-2 pt-1 pb-1 safe-bottom shadow-2xl shadow-red-950/30 flex justify-around items-center min-h-[4rem]">
         <button
           onClick={() => setActiveTab("combat")}
-          className={`relative p-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 ${
+          className={`relative py-1.5 px-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 touch-manipulation min-h-[46px] ${
             activeTab === "combat" ? "text-red-400 font-extrabold" : "text-gray-400 hover:text-gray-200"
           }`}
           id="tab-combat"
         >
           <Swords className={`w-5 h-5 ${activeTab === "combat" ? "animate-pulse text-red-400" : ""}`} />
-          <span className="text-[10px] font-mono tracking-wide mt-1">Combate</span>
+          <span className="text-[11px] font-mono tracking-wide mt-1">Combate</span>
           {activeTab === "combat" && (
             <motion.div
               layoutId="active-tab-glow"
-              className="absolute -top-2 w-10 h-0.5 bg-gradient-to-r from-red-500 to-purple-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.9)]"
+              className="absolute -top-1 w-10 h-0.5 bg-gradient-to-r from-red-500 to-purple-500 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.9)]"
             />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab("features")}
-          className={`relative p-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 ${
+          className={`relative py-1.5 px-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 touch-manipulation min-h-[46px] ${
             activeTab === "features" ? "text-amber-400 font-extrabold" : "text-gray-400 hover:text-gray-200"
           }`}
           id="tab-traits"
         >
           <Award className={`w-5 h-5 ${activeTab === "features" ? "text-amber-400" : ""}`} />
-          <span className="text-[10px] font-mono tracking-wide mt-1">Traços</span>
+          <span className="text-[11px] font-mono tracking-wide mt-1">Traços</span>
           {activeTab === "features" && (
             <motion.div
               layoutId="active-tab-glow"
-              className="absolute -top-2 w-10 h-0.5 bg-gradient-to-r from-amber-400 to-red-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.9)]"
+              className="absolute -top-1 w-10 h-0.5 bg-gradient-to-r from-amber-400 to-red-500 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.9)]"
             />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab("spells")}
-          className={`relative p-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 ${
+          className={`relative py-1.5 px-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 touch-manipulation min-h-[46px] ${
             activeTab === "spells" ? "text-purple-400 font-extrabold" : "text-gray-400 hover:text-gray-200"
           }`}
           id="tab-spells"
         >
           <Sparkles className={`w-5 h-5 ${activeTab === "spells" ? "text-purple-400" : ""}`} />
-          <span className="text-[10px] font-mono tracking-wide mt-1">Magias</span>
+          <span className="text-[11px] font-mono tracking-wide mt-1">Magias</span>
           {activeTab === "spells" && (
             <motion.div
               layoutId="active-tab-glow"
-              className="absolute -top-2 w-10 h-0.5 bg-gradient-to-r from-purple-500 to-red-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.9)]"
+              className="absolute -top-1 w-10 h-0.5 bg-gradient-to-r from-purple-500 to-red-500 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.9)]"
             />
           )}
         </button>
 
         <button
           onClick={() => setActiveTab("inventory")}
-          className={`relative p-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 ${
+          className={`relative py-1.5 px-2 flex flex-col items-center justify-center flex-1 transition-all active:scale-95 touch-manipulation min-h-[46px] ${
             activeTab === "inventory" ? "text-amber-300 font-extrabold" : "text-gray-400 hover:text-gray-200"
           }`}
           id="tab-inventory"
         >
           <ShoppingBag className={`w-5 h-5 ${activeTab === "inventory" ? "text-amber-300" : ""}`} />
-          <span className="text-[10px] font-mono tracking-wide mt-1">Mochila</span>
+          <span className="text-[11px] font-mono tracking-wide mt-1">Mochila</span>
           {activeTab === "inventory" && (
             <motion.div
               layoutId="active-tab-glow"
-              className="absolute -top-2 w-10 h-0.5 bg-gradient-to-r from-amber-300 to-red-500 rounded-full shadow-[0_0_10px_rgba(252,211,77,0.9)]"
+              className="absolute -top-1 w-10 h-0.5 bg-gradient-to-r from-amber-300 to-red-500 rounded-full shadow-[0_0_10px_rgba(252,211,77,0.9)]"
             />
           )}
         </button>

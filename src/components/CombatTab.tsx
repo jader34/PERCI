@@ -10,7 +10,10 @@ import {
   Zap,
   Crosshair,
   Footprints,
-  Compass
+  Compass,
+  Wind,
+  Edit3,
+  Sparkles
 } from "lucide-react";
 import { CharacterData } from "../types";
 
@@ -98,29 +101,29 @@ export default function CombatTab({
 
     if (useAmulet) {
       if (!hasDevoutAmulet) {
-        triggerFeedback("⚠️ Você não possui o Amuleto do Devoto equipado!");
+        triggerFeedback("Você não possui o Amuleto do Devoto equipado!");
         return;
       }
       if (char.devoutAmuletUsed) {
-        triggerFeedback("⚠️ O Amuleto do Devoto já foi utilizado hoje! (Recarrega no amanhecer)");
+        triggerFeedback("O Amuleto do Devoto já foi utilizado hoje (Recarrega no amanhecer).");
         return;
       }
       onToggleDevoutAmulet?.(true);
       setBlessingActive(true);
-      triggerFeedback("🔮 Bênção de Sangue ativada via Amuleto do Devoto! (+4 para acertar na Alabarda, dano Radiante e Marca de Sangue).");
+      triggerFeedback("Bênção de Sangue ativada via Amuleto do Devoto (+4 para acertar na Alabarda, dano Radiante e Marca de Sangue).");
       return;
     }
 
     if (channelDivinity.current > 0) {
       onUpdateResource("channelDivinity", channelDivinity.current - 1);
       setBlessingActive(true);
-      triggerFeedback("🩸 Bênção de Sangue ativada! (+4 para acertar com Alabarda por 1 min, 1º acerto causa dano Radiante e aplica Marca de Sangue).");
+      triggerFeedback("Bênção de Sangue ativada (+4 para acertar com Alabarda por 1 min, 1º acerto causa dano Radiante e aplica Marca de Sangue).");
     } else if (hasDevoutAmulet && !char.devoutAmuletUsed) {
       onToggleDevoutAmulet?.(true);
       setBlessingActive(true);
-      triggerFeedback("🔮 Bênção de Sangue ativada via Amuleto do Devoto! (+4 no acerto).");
+      triggerFeedback("Bênção de Sangue ativada via Amuleto do Devoto (+4 no acerto).");
     } else {
-      triggerFeedback("⚠️ Sem usos de Canalizar Divindade ou Amuleto do Devoto! (Necessita descanso)");
+      triggerFeedback("Sem usos de Canalizar Divindade ou Amuleto do Devoto (Necessita descanso).");
     }
   };
 
@@ -129,25 +132,25 @@ export default function CombatTab({
 
     if (useAmulet) {
       if (!hasDevoutAmulet) {
-        triggerFeedback("⚠️ Você não possui o Amuleto do Devoto equipado!");
+        triggerFeedback("Você não possui o Amuleto do Devoto equipado!");
         return;
       }
       if (char.devoutAmuletUsed) {
-        triggerFeedback("⚠️ O Amuleto do Devoto já foi utilizado hoje!");
+        triggerFeedback("O Amuleto do Devoto já foi utilizado hoje!");
         return;
       }
       onToggleDevoutAmulet?.(true);
-      triggerFeedback(`🔮 Absorver Vitalidade via Amuleto! Alvo deve passar em Salvaguarda de CON (CD ${spellSaveDc}) ou ficará IMPEDIDO.`);
+      triggerFeedback(`Absorver Vitalidade via Amuleto: Alvo deve passar em Salvaguarda de CON (CD ${spellSaveDc}) ou ficará IMPEDIDO.`);
       return;
     }
 
     if (channelDivinity.current <= 0) {
-      triggerFeedback("⚠️ Sem usos restantes de Canalizar Divindade! (Necessita descanso curto ou longo)");
+      triggerFeedback("Sem usos restantes de Canalizar Divindade (Necessita descanso curto ou longo).");
       return;
     }
 
     onUpdateResource("channelDivinity", channelDivinity.current - 1);
-    triggerFeedback(`🩸 Absorver Vitalidade ativado! Alvo tocado deve passar em Salvaguarda de CON (CD ${spellSaveDc}) ou ficará IMPEDIDO.`);
+    triggerFeedback(`Absorver Vitalidade ativado! Alvo tocado deve passar em Salvaguarda de CON (CD ${spellSaveDc}) ou ficará IMPEDIDO.`);
   };
 
   // Divine Smite Handler
@@ -155,7 +158,7 @@ export default function CombatTab({
     const canUse = onUseSpellSlot(level);
     if (!canUse) return;
     const numDice = level === 1 ? 2 : 3;
-    triggerFeedback(`⚡ Destruição Divina ativada com espaço de ${level}º nível! Role +${numDice}d8 de dano Radiante físico (+1d8 extra se for morto-vivo/corruptor).`);
+    triggerFeedback(`Destruição Divina ativada com espaço de ${level}º nível! Role +${numDice}d8 de dano Radiante físico (+1d8 extra se for morto-vivo/corruptor).`);
   };
 
   // Lay on Hands Handler
@@ -169,9 +172,9 @@ export default function CombatTab({
     if (healSelf) {
       const newHp = Math.min(char.hp.max, char.hp.current + amount);
       onUpdateHp(newHp, char.hp.temp);
-      setLayOnHandsMsg(`✨ ${amount} HP curados em Percival! Vida: ${newHp}/${char.hp.max}. Reserva: ${newPool}/${char.layOnHands.max} HP.`);
+      setLayOnHandsMsg(`${amount} HP curados em Percival! Vida: ${newHp}/${char.hp.max}. Reserva: ${newPool}/${char.layOnHands.max} HP.`);
     } else {
-      setLayOnHandsMsg(`✨ ${amount} HP gastos da reserva (Cura realizada em aliado/outro). Reserva: ${newPool}/${char.layOnHands.max} HP.`);
+      setLayOnHandsMsg(`${amount} HP gastos da reserva (Cura realizada em aliado/outro). Reserva: ${newPool}/${char.layOnHands.max} HP.`);
     }
 
     setLayOnHandsAmountStr("");
@@ -180,19 +183,19 @@ export default function CombatTab({
 
   const handleCureCondition = () => {
     if (char.layOnHands.current < 5) {
-      triggerFeedback("⚠️ São necessários pelo menos 5 pontos da reserva de Cura pelas Mãos para curar uma doença ou veneno!");
+      triggerFeedback("São necessários pelo menos 5 pontos da reserva de Cura pelas Mãos para curar uma doença ou veneno!");
       return;
     }
     const newPool = char.layOnHands.current - 5;
     onUpdateResource("layOnHands", newPool);
-    triggerFeedback(`🧪 5 HP da reserva gastos para neutralizar 1 veneno ou curar 1 doença! Reserva restante: ${newPool}/${char.layOnHands.max} HP.`);
+    triggerFeedback(`5 HP da reserva gastos para neutralizar 1 veneno ou curar 1 doença! Reserva restante: ${newPool}/${char.layOnHands.max} HP.`);
   };
 
   // Divine Sense Handler
   const handleDivineSense = () => {
     if (char.divineSense.current <= 0) return;
     onUpdateResource("divineSense", char.divineSense.current - 1);
-    triggerFeedback("👁️ Sentido Divino ativo! Concentre-se por 1 rodada para detectar seres celestiais, corruptores ou mortos-vivos a até 18m.");
+    triggerFeedback("Sentido Divino ativo! Concentre-se por 1 rodada para detectar seres celestiais, corruptores ou mortos-vivos a até 18m.");
   };
 
   // Blood Veil Handler
@@ -204,13 +207,13 @@ export default function CombatTab({
     }
 
     if (char.bloodVeilUsed) {
-      triggerFeedback("⚠️ O Véu de Sangue já foi utilizado hoje! (Recarrega após um Descanso Longo).");
+      triggerFeedback("O Véu de Sangue já foi utilizado hoje (Recarrega após um Descanso Longo).");
       return;
     }
 
     onToggleBloodVeil?.(true);
     setBloodVeilActive(true);
-    triggerFeedback("🩸 Véu de Sangue ativado por 1 minuto! Névoa de sangue concede Meia Cobertura (+2 CA e +2 salvaguardas de DES) para você e aliados a até 1,5m.");
+    triggerFeedback("Véu de Sangue ativado por 1 minuto! Névoa de sangue concede Meia Cobertura (+2 CA e +2 salvaguardas de DES) para você e aliados a até 1,5m.");
   };
 
   return (
@@ -236,6 +239,10 @@ export default function CombatTab({
                 <span className={`w-2 h-2 rounded-full ${char.hp.current <= char.hp.max * 0.4 ? "bg-red-500 animate-ping" : "bg-red-500"}`} />
                 PONTOS DE VIDA
               </span>
+              <span className="text-[9px] font-mono text-red-300/90 bg-red-950/80 border border-red-800/50 px-1.5 py-0.5 rounded font-bold leading-none flex items-center gap-1">
+                <Edit3 className="w-2.5 h-2.5" />
+                Alterar
+              </span>
             </div>
 
             <div className="mt-2">
@@ -247,14 +254,14 @@ export default function CombatTab({
                   / {char.hp.max}
                 </span>
                 {char.hp.temp > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.5 bg-blue-900/50 border border-blue-500/30 text-blue-300 rounded-md font-mono ml-1 font-extrabold">
+                  <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 rounded-md font-mono ml-1 font-extrabold">
                     +{char.hp.temp} Temp
                   </span>
                 )}
               </div>
 
               {/* HP Bar */}
-              <div className={`w-full bg-fantasy-slate-950 rounded-full h-1.5 mt-2 overflow-hidden border ${char.hp.current <= char.hp.max * 0.4 ? "border-red-800/80" : "border-red-900/30"}`}>
+              <div className={`w-full bg-fantasy-slate-950 rounded-full h-2 mt-2 overflow-hidden border ${char.hp.current <= char.hp.max * 0.4 ? "border-red-800/80" : "border-red-900/30"}`}>
                 <div
                   className={`h-full rounded-full transition-all duration-300 ${
                     char.hp.current <= char.hp.max * 0.4
@@ -320,11 +327,11 @@ export default function CombatTab({
         <div className="flex flex-wrap gap-2 items-center justify-between bg-fantasy-slate-900/50 p-2 rounded-xl border border-fantasy-slate-755 text-[10px] font-mono">
           {/* Slots 1 & 2 Quick Visual Tracker */}
           <div className="flex items-center gap-2">
-            <span className="text-gray-400 uppercase font-bold">Espaços:</span>
-            <span className={`px-2 py-0.5 rounded-full border ${slot1.current > 0 ? "bg-purple-950/70 border-purple-500/50 text-purple-200" : "bg-gray-900 border-gray-800 text-gray-500"}`}>
+            <span className="text-stone-400 uppercase font-bold">Espaços:</span>
+            <span className={`px-2 py-0.5 rounded-full border ${slot1.current > 0 ? "bg-purple-950/70 border-purple-500/50 text-purple-200" : "bg-slate-900 border-slate-800 text-purple-300/40"}`}>
               1º: {slot1.current}/{slot1.max}
             </span>
-            <span className={`px-2 py-0.5 rounded-full border ${slot2.current > 0 ? "bg-purple-950/70 border-purple-500/50 text-purple-200" : "bg-gray-900 border-gray-800 text-gray-500"}`}>
+            <span className={`px-2 py-0.5 rounded-full border ${slot2.current > 0 ? "bg-purple-950/70 border-purple-500/50 text-purple-200" : "bg-slate-900 border-slate-800 text-purple-300/40"}`}>
               2º: {slot2.current}/{slot2.max}
             </span>
           </div>
@@ -362,7 +369,7 @@ export default function CombatTab({
         <button
           type="button"
           onClick={() => setCombatSubTab("actions")}
-          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] ${
+          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] min-h-[46px] touch-manipulation ${
             combatSubTab === "actions"
               ? "bg-gradient-to-r from-red-700 via-rose-600 to-red-800 text-white shadow-lg shadow-red-950/80 border border-red-400/50 ring-1 ring-red-400/30"
               : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800/80 border border-transparent"
@@ -378,7 +385,7 @@ export default function CombatTab({
         <button
           type="button"
           onClick={() => setCombatSubTab("bonus")}
-          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] ${
+          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] min-h-[46px] touch-manipulation ${
             combatSubTab === "bonus"
               ? "bg-gradient-to-r from-amber-600 via-amber-500 to-orange-600 text-slate-950 shadow-lg shadow-amber-950/80 border border-amber-300/60 ring-1 ring-amber-300/40"
               : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800/80 border border-transparent"
@@ -394,21 +401,21 @@ export default function CombatTab({
         <button
           type="button"
           onClick={() => setCombatSubTab("reactions_steed")}
-          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] ${
+          className={`py-2 px-1 rounded-xl font-mono text-xs font-bold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 transition-all text-center select-none active:scale-[0.97] min-h-[46px] touch-manipulation ${
             combatSubTab === "reactions_steed"
-              ? "bg-gradient-to-r from-purple-800 via-purple-700 to-indigo-900 text-white shadow-lg shadow-purple-950/80 border border-purple-400/50 ring-1 ring-purple-400/30"
-              : "text-gray-400 hover:text-gray-200 hover:bg-fantasy-slate-800/80 border border-transparent"
+              ? "bg-gradient-to-r from-red-950 via-rose-900 to-red-950 text-rose-100 shadow-lg shadow-red-950/80 border border-rose-400/50 ring-1 ring-rose-400/30"
+              : "text-stone-400 hover:text-stone-200 hover:bg-fantasy-slate-800/80 border border-transparent"
           }`}
         >
-          <Shield className={`w-4 h-4 shrink-0 ${combatSubTab === "reactions_steed" ? "text-purple-200" : "text-purple-400/80"}`} />
+          <Shield className={`w-4 h-4 shrink-0 ${combatSubTab === "reactions_steed" ? "text-rose-200" : "text-rose-400/80"}`} />
           <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1 leading-tight">
             <span className="text-[11px] sm:text-xs font-extrabold tracking-tight">Reações</span>
-            <span className={`text-[8px] sm:text-[9px] font-mono ${combatSubTab === "reactions_steed" ? "text-purple-200/90" : "text-gray-500"}`}>🐎 Montaria</span>
+            <span className={`text-[8px] sm:text-[9px] font-mono ${combatSubTab === "reactions_steed" ? "text-rose-200/90" : "text-stone-500"}`}>Montaria</span>
           </div>
         </button>
       </div>
 
-      {/* 4. SUB-TAB CONTENT: ⚔️ AÇÕES (ACTIONS) */}
+      {/* 4. SUB-TAB CONTENT: AÇÕES (ACTIONS) */}
       {combatSubTab === "actions" && (
         <div className="space-y-4 animate-fadeIn">
           {/* SECTION HEADER: ATTACK ACTION WITH EXTRA ATTACK */}
@@ -418,8 +425,9 @@ export default function CombatTab({
                 <Swords className="w-4 h-4 text-red-400 animate-pulse" />
                 Ação de Ataque (Ataque Extra Ativo)
               </h4>
-              <span className="text-[9px] font-mono bg-red-950 border border-red-800/60 text-red-300 px-2 py-0.5 rounded-full font-bold">
-                2 Golpes por Ação ⚔️⚔️
+              <span className="text-[9px] font-mono bg-red-950 border border-red-800/60 text-red-300 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <Swords className="w-2.5 h-2.5" />
+                2 Golpes por Ação
               </span>
             </div>
 
@@ -467,29 +475,31 @@ export default function CombatTab({
               </div>
 
               {/* Inline Divine Smite Trigger on Hit */}
-              <div className="pt-2 border-t border-red-900/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
-                <span className="text-[10px] font-mono text-gray-300 flex items-center gap-1">
+              <div className="pt-2.5 border-t border-red-900/30 space-y-1.5">
+                <span className="text-[10px] sm:text-xs font-mono text-gray-300 flex items-center gap-1">
                   <Flame className="w-3.5 h-3.5 text-red-400" />
-                  Acertou o golpe? Adicione Destruição Divina:
+                  Acertou o golpe? Destruição Divina (Smite):
                 </span>
-                <div className="flex gap-1.5">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
                     onClick={() => handleDivineSmite(1)}
                     disabled={slot1.current <= 0}
-                    className="flex-1 sm:flex-none px-2.5 py-1.5 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-200 rounded-lg text-[10px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95 flex items-center justify-center gap-1"
+                    className="py-2 px-2 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-200 rounded-xl text-[11px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95 flex items-center justify-center gap-1 min-h-[38px] touch-manipulation shadow"
                     title="Gasta 1º Nível para +2d8 Radiante"
                   >
-                    ⚡ +2d8 (1º Nív)
+                    <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+                    +2d8 (1º: {slot1.current}/{slot1.max})
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDivineSmite(2)}
                     disabled={slot2.current <= 0}
-                    className="flex-1 sm:flex-none px-2.5 py-1.5 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-200 rounded-lg text-[10px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95 flex items-center justify-center gap-1"
+                    className="py-2 px-2 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-200 rounded-xl text-[11px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95 flex items-center justify-center gap-1 min-h-[38px] touch-manipulation shadow"
                     title="Gasta 2º Nível para +3d8 Radiante"
                   >
-                    ⚡ +3d8 (2º Nív)
+                    <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+                    +3d8 (2º: {slot2.current}/{slot2.max})
                   </button>
                 </div>
               </div>
@@ -524,7 +534,7 @@ export default function CombatTab({
                         : "bg-fantasy-gold/20 text-fantasy-gold border-fantasy-gold/40 shadow-[0_0_8px_rgba(245,158,11,0.2)] animate-pulse"
                     }`}
                   >
-                    🔮 Amuleto: {char.devoutAmuletUsed ? "Usado ✖" : "Disponível (1/1) ✓"}
+                    Amuleto: {char.devoutAmuletUsed ? "Esgotado" : "Disponível (1/1)"}
                   </button>
                 )}
               </div>
@@ -544,9 +554,10 @@ export default function CombatTab({
                   <button
                     type="button"
                     onClick={() => handleChannelDivinityAbsorb()}
-                    className="w-full py-1.5 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-100 rounded-lg text-xs font-mono font-bold transition-all active:scale-95 shadow"
+                    className="w-full py-1.5 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-100 rounded-lg text-xs font-mono font-bold transition-all active:scale-95 shadow flex items-center justify-center gap-1"
                   >
-                    🩸 Usar Absorção
+                    <Droplets className="w-3.5 h-3.5 text-red-400" />
+                    Usar Absorção
                   </button>
                 </div>
 
@@ -573,13 +584,14 @@ export default function CombatTab({
                   <button
                     type="button"
                     onClick={() => handleToggleBlessing()}
-                    className={`w-full py-1.5 rounded-lg text-xs font-mono font-bold transition-all active:scale-95 shadow border ${
+                    className={`w-full py-1.5 rounded-lg text-xs font-mono font-bold transition-all active:scale-95 shadow border flex items-center justify-center gap-1.5 ${
                       blessingActive
                         ? "bg-red-600 hover:bg-red-500 text-white border-red-400"
                         : "bg-red-950 hover:bg-red-900 border-red-700/60 text-red-100"
                     }`}
                   >
-                    {blessingActive ? "✕ DESATIVAR (+4)" : "🩸 ATIVAR BÊNÇÃO (+4)"}
+                    <Droplets className="w-3.5 h-3.5" />
+                    {blessingActive ? "Desativar Bênção (+4)" : "Ativar Bênção (+4)"}
                   </button>
                 </div>
               </div>
@@ -605,14 +617,14 @@ export default function CombatTab({
                   onChange={(e) => setLayOnHandsAmountStr(e.target.value)}
                   min="1"
                   max={char.layOnHands.current}
-                  className="w-full sm:w-32 bg-fantasy-slate-800 border border-fantasy-slate-700/80 rounded-xl py-2 px-3 text-center text-xs font-mono text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full sm:w-32 bg-fantasy-slate-800 border border-fantasy-slate-700/80 rounded-xl py-2.5 px-3 text-center text-sm font-mono text-white focus:outline-none focus:border-emerald-500 min-h-[42px]"
                 />
-                <div className="flex gap-2 flex-1">
+                <div className="grid grid-cols-2 gap-2 flex-1">
                   <button
                     type="button"
                     onClick={() => handleLayOnHands(true)}
                     disabled={!layOnHandsAmountStr || parseInt(layOnHandsAmountStr, 10) <= 0 || parseInt(layOnHandsAmountStr, 10) > char.layOnHands.current}
-                    className="flex-1 py-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-40"
+                    className="py-2.5 px-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-200 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-40 min-h-[42px] flex items-center justify-center text-center touch-manipulation shadow"
                   >
                     + Curar Percival
                   </button>
@@ -620,22 +632,23 @@ export default function CombatTab({
                     type="button"
                     onClick={() => handleLayOnHands(false)}
                     disabled={!layOnHandsAmountStr || parseInt(layOnHandsAmountStr, 10) <= 0 || parseInt(layOnHandsAmountStr, 10) > char.layOnHands.current}
-                    className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-40"
+                    className="py-2.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-40 min-h-[42px] flex items-center justify-center text-center touch-manipulation shadow"
                   >
                     Gastar (Aliado)
                   </button>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center pt-1 border-t border-emerald-900/30">
-                <span className="text-[10px] text-gray-400 font-mono">Gastar 5 HP da reserva cura 1 doença ou veneno:</span>
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 pt-2 border-t border-emerald-900/30">
+                <span className="text-[10px] text-gray-400 font-mono">Gastar 5 HP cura 1 doença ou veneno:</span>
                 <button
                   type="button"
                   onClick={handleCureCondition}
                   disabled={char.layOnHands.current < 5}
-                  className="px-2.5 py-1 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/50 text-emerald-300 text-[10px] font-mono font-bold rounded-lg transition-all active:scale-95 disabled:opacity-30"
+                  className="py-2 px-3 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/50 text-emerald-300 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-30 min-h-[38px] touch-manipulation flex items-center justify-center gap-1.5"
                 >
-                  🧪 Curar Doença/Veneno (5 HP)
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  Curar Doença ou Veneno (5 PV)
                 </button>
               </div>
 
@@ -681,17 +694,26 @@ export default function CombatTab({
             </h4>
             <div className="grid grid-cols-3 gap-2">
               <div className="p-2.5 bg-fantasy-slate-800/60 border border-fantasy-slate-700 rounded-xl">
-                <span className="text-xs font-bold font-mono text-gray-200 block">🏃 Disparar (Dash)</span>
+                <span className="text-xs font-bold font-mono text-gray-200 flex items-center gap-1">
+                  <Footprints className="w-3.5 h-3.5 text-stone-400" />
+                  Disparar (Dash)
+                </span>
                 <span className="text-[9px] text-gray-400 font-mono block mt-0.5">Dobra movimento (+9m)</span>
               </div>
 
               <div className="p-2.5 bg-fantasy-slate-800/60 border border-fantasy-slate-700 rounded-xl">
-                <span className="text-xs font-bold font-mono text-gray-200 block">🛡️ Esquivar (Dodge)</span>
+                <span className="text-xs font-bold font-mono text-gray-200 flex items-center gap-1">
+                  <Shield className="w-3.5 h-3.5 text-stone-400" />
+                  Esquivar (Dodge)
+                </span>
                 <span className="text-[9px] text-gray-400 font-mono block mt-0.5">Ataques contra têm desv.</span>
               </div>
 
               <div className="p-2.5 bg-fantasy-slate-800/60 border border-fantasy-slate-700 rounded-xl">
-                <span className="text-xs font-bold font-mono text-gray-200 block">💨 Desengajar</span>
+                <span className="text-xs font-bold font-mono text-gray-200 flex items-center gap-1">
+                  <Wind className="w-3.5 h-3.5 text-stone-400" />
+                  Desengajar
+                </span>
                 <span className="text-[9px] text-gray-400 font-mono block mt-0.5">Sem ataques oportunidade</span>
               </div>
             </div>
@@ -699,7 +721,7 @@ export default function CombatTab({
         </div>
       )}
 
-      {/* 5. SUB-TAB CONTENT: ⚡ AÇÕES BÔNUS (BONUS ACTIONS) */}
+      {/* 5. SUB-TAB CONTENT: AÇÕES BÔNUS (BONUS ACTIONS) */}
       {combatSubTab === "bonus" && (
         <div className="space-y-4 animate-fadeIn">
           {/* 1. GOLPE COM O CABO DA ALABARDA (POLEARM MASTER) */}
@@ -741,27 +763,29 @@ export default function CombatTab({
             </div>
 
             {/* Inline Smite Trigger */}
-            <div className="pt-2 border-t border-amber-900/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
-              <span className="text-[10px] font-mono text-gray-300 flex items-center gap-1">
+            <div className="pt-2.5 border-t border-amber-900/30 space-y-1.5">
+              <span className="text-[10px] sm:text-xs font-mono text-gray-300 flex items-center gap-1">
                 <Flame className="w-3.5 h-3.5 text-amber-400" />
-                Acoplou Smite no golpe de cabo?
+                Acoplou Destruição Divina (Smite)?
               </span>
-              <div className="flex gap-1.5">
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => handleDivineSmite(1)}
                   disabled={slot1.current <= 0}
-                  className="flex-1 sm:flex-none px-2.5 py-1.5 bg-amber-950 hover:bg-amber-900 border border-amber-700/60 text-amber-200 rounded-lg text-[10px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
+                  className="py-2 px-2 bg-amber-950 hover:bg-amber-900 border border-amber-700/60 text-amber-200 rounded-xl text-[11px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95 min-h-[38px] touch-manipulation shadow flex items-center justify-center gap-1"
                 >
-                  ⚡ +2d8 (1º Nív)
+                  <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+                  +2d8 (1º: {slot1.current}/{slot1.max})
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDivineSmite(2)}
                   disabled={slot2.current <= 0}
-                  className="flex-1 sm:flex-none px-2.5 py-1.5 bg-amber-950 hover:bg-amber-900 border border-amber-700/60 text-amber-200 rounded-lg text-[10px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
+                  className="py-2 px-2 bg-amber-950 hover:bg-amber-900 border border-amber-700/60 text-amber-200 rounded-xl text-[11px] font-mono font-bold transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95 min-h-[38px] touch-manipulation shadow flex items-center justify-center gap-1"
                 >
-                  ⚡ +3d8 (2º Nív)
+                  <Zap className="w-3 h-3 text-amber-400 shrink-0" />
+                  +3d8 (2º: {slot2.current}/{slot2.max})
                 </button>
               </div>
             </div>
@@ -783,7 +807,7 @@ export default function CombatTab({
                       ? "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse"
                       : "bg-fantasy-slate-800 text-gray-400 border-fantasy-slate-700"
                   }`}>
-                    {char.huntersMarkActive ? "🎯 ATIVA (CONCENTRAÇÃO)" : "1º CÍRCULO • 27 METROS"}
+                    {char.huntersMarkActive ? "Ativa (Concentração)" : "1º Círculo • 27 Metros"}
                   </span>
                 </div>
                 <p className="text-[10px] text-gray-300 font-mono mt-1 leading-relaxed">
@@ -797,10 +821,11 @@ export default function CombatTab({
                 <>
                   <button
                     type="button"
-                    onClick={() => triggerFeedback("🏹 Marca do Caçador movida para uma nova criatura! (Ação Bônus consumida, sem gastar slot).")}
+                    onClick={() => triggerFeedback("Marca do Caçador movida para uma nova criatura (Ação Bônus consumida).")}
                     className="flex-1 py-2 bg-amber-950 hover:bg-amber-900 border border-amber-600/50 text-amber-200 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 shadow flex items-center justify-center gap-1.5"
                   >
-                    🏹 Mover Marca para Novo Alvo (Ação Bônus)
+                    <Crosshair className="w-3.5 h-3.5 text-amber-400" />
+                    Mover Marca para Novo Alvo
                   </button>
                   <button
                     type="button"
@@ -810,7 +835,7 @@ export default function CombatTab({
                     }}
                     className="px-3 py-2 bg-red-950 hover:bg-red-900 text-red-200 border border-red-700/60 text-xs font-mono font-bold rounded-xl transition-all active:scale-95"
                   >
-                    ✕ Encerrar
+                    Encerrar
                   </button>
                 </>
               ) : (
@@ -820,11 +845,11 @@ export default function CombatTab({
                     const success = onUseSpellSlot(1);
                     if (success) {
                       onToggleHuntersMark?.(true);
-                      triggerFeedback("🎯 Marca do Caçador ativada! (+1d6 em todos os acertos com arma).");
+                      triggerFeedback("Marca do Caçador ativada (+1d6 em todos os acertos com arma).");
                     }
                   }}
                   disabled={slot1.current <= 0}
-                  className="w-full py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-mono font-extrabold rounded-xl transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none shadow flex items-center justify-center gap-1.5"
+                  className="w-full py-2 bg-amber-400 hover:bg-amber-300 text-amber-950 text-xs font-mono font-extrabold rounded-xl transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none shadow flex items-center justify-center gap-1.5"
                 >
                   <Crosshair className="w-4 h-4" />
                   CONJURAR MARCA DO CAÇADOR (Gasta 1º Nível)
@@ -852,9 +877,9 @@ export default function CombatTab({
                       : "bg-rose-950 text-rose-300 border-rose-800/60"
                   }`}>
                     {bloodVeilActive
-                      ? "🩸 NÉVOA ATIVA (1 MIN)"
+                      ? "Névoa Ativa (1 min)"
                       : char.bloodVeilUsed
-                      ? "USADO HOJE ✖"
+                      ? "Esgotado Hoje"
                       : "1x POR DESCANSO LONGO"}
                   </span>
                 </div>
@@ -871,7 +896,7 @@ export default function CombatTab({
                   onClick={handleToggleBloodVeil}
                   className="w-full py-2 bg-red-950 hover:bg-red-900 text-rose-200 border border-red-700/60 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
                 >
-                  ✕ Dissipar Névoa de Sangue
+                  Dissipar Névoa de Sangue
                 </button>
               ) : (
                 <button
@@ -893,7 +918,7 @@ export default function CombatTab({
           <div className="p-3.5 bg-fantasy-slate-900/80 border border-fantasy-slate-755 rounded-2xl flex items-center justify-between gap-3">
             <div>
               <span className="text-xs font-bold font-mono text-red-300 flex items-center gap-1.5">
-                <span className="text-base">🐎</span>
+                <Shield className="w-4 h-4 text-rose-400" />
                 Investida do Pesadelo Sanguinário (Ação Bônus da Montaria)
               </span>
               <p className="text-[10px] text-gray-300 mt-0.5">
@@ -902,16 +927,16 @@ export default function CombatTab({
             </div>
             <button
               type="button"
-              onClick={() => triggerFeedback("🐎 Pesadelo desferiu o Ataque de Cascos como Ação Bônus! (+6 para acertar, dano 2d6 + 4 concussão).")}
+              onClick={() => triggerFeedback("Pesadelo desferiu o Ataque de Cascos como Ação Bônus (+6 para acertar, dano 2d6 + 4 concussão).")}
               className="px-3 py-2 bg-red-950 hover:bg-red-900 border border-red-700/60 text-red-200 text-xs font-mono font-bold rounded-xl active:scale-95 shrink-0"
             >
-              🐎 Cascos Bônus
+              Ataque de Cascos
             </button>
           </div>
         </div>
       )}
 
-      {/* 6. SUB-TAB CONTENT: 🛡️ REAÇÕES & MONTARIA */}
+      {/* 6. SUB-TAB CONTENT: REAÇÕES & MONTARIA */}
       {combatSubTab === "reactions_steed" && (
         <div className="space-y-4 animate-fadeIn">
           {/* REAÇÕES DO COMBATENTE */}
@@ -968,7 +993,7 @@ export default function CombatTab({
           <div className="bg-gradient-to-br from-red-950/40 via-purple-950/20 to-fantasy-slate-900 border border-red-900/50 rounded-2xl p-4 space-y-4 shadow-lg shadow-red-950/20">
             <div className="flex justify-between items-center border-b border-red-900/40 pb-2">
               <h4 className="text-xs uppercase tracking-wider font-bold text-red-300 font-mono flex items-center gap-2">
-                <span className="text-base">🐎</span>
+                <Shield className="w-4 h-4 text-rose-400" />
                 Pesadelo Sanguinário (Montaria Infernal)
               </h4>
               <span className="text-[9px] px-2 py-0.5 bg-red-950 text-red-300 border border-red-900/50 rounded font-mono font-bold">
@@ -990,7 +1015,7 @@ export default function CombatTab({
               >
                 <span className="text-[9px] font-mono text-gray-400 uppercase tracking-wider block flex items-center justify-center gap-1">
                   Pontos de Vida (PV)
-                  <span className="text-[9px] text-red-400 opacity-80 group-hover:opacity-100">✏️</span>
+                  <Edit3 className="w-2.5 h-2.5 text-red-400 opacity-80 group-hover:opacity-100 inline" />
                 </span>
                 <span className="text-base font-bold font-mono text-red-400">
                   {mountHp} <span className="text-xs text-gray-500">/ 19</span>
@@ -1013,7 +1038,7 @@ export default function CombatTab({
                     onClick={() => setShowMountHpControls(false)}
                     className="text-gray-400 hover:text-white text-xs px-1"
                   >
-                    ✕ Fechar
+                    Fechar
                   </button>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1026,23 +1051,25 @@ export default function CombatTab({
                       if (e.key === "Enter") handleMountDamage();
                     }}
                     placeholder="Qtd (ex: 5)"
-                    className="w-28 bg-fantasy-slate-950 border border-fantasy-slate-700 text-white text-xs font-mono rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-red-500"
+                    className="w-24 sm:w-28 bg-fantasy-slate-950 border border-fantasy-slate-700 text-white text-sm font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-red-500 min-h-[40px]"
                   />
                   <button
                     type="button"
                     onClick={handleMountDamage}
                     disabled={!mountHpValStr || parseInt(mountHpValStr, 10) <= 0}
-                    className="flex-1 py-1.5 bg-red-950 hover:bg-red-900 border border-red-700/80 text-red-200 text-xs font-mono font-bold rounded-lg transition-all active:scale-95 disabled:opacity-40 shadow"
+                    className="flex-1 py-2 bg-red-950 hover:bg-red-900 border border-red-700/80 text-red-200 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-40 shadow min-h-[40px] touch-manipulation flex items-center justify-center gap-1"
                   >
-                    💥 Dano
+                    <Flame className="w-3.5 h-3.5 text-rose-400" />
+                    Dano
                   </button>
                   <button
                     type="button"
                     onClick={handleMountHeal}
                     disabled={!mountHpValStr || parseInt(mountHpValStr, 10) <= 0}
-                    className="flex-1 py-1.5 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700/80 text-emerald-200 text-xs font-mono font-bold rounded-lg transition-all active:scale-95 disabled:opacity-40 shadow"
+                    className="flex-1 py-2 bg-emerald-950 hover:bg-emerald-900 border border-emerald-700/80 text-emerald-200 text-xs font-mono font-bold rounded-xl transition-all active:scale-95 disabled:opacity-40 shadow min-h-[40px] touch-manipulation flex items-center justify-center gap-1"
                   >
-                    💚 Cura
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                    Cura
                   </button>
                 </div>
               </div>

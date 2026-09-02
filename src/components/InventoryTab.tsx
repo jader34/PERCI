@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Coins, Plus, Trash2, Shield, Gem, ShoppingBag, Weight, HelpCircle } from "lucide-react";
+import { Coins, Plus, Trash2, Shield, Gem, ShoppingBag, Weight, HelpCircle, AlertTriangle } from "lucide-react";
 import { CharacterData, InventoryItem } from "../types";
 
 interface InventoryTabProps {
@@ -123,13 +123,13 @@ export default function InventoryTab({ char, onUpdateInventory, onUpdateCoins }:
             <div className="flex justify-center gap-2">
               <button
                 onClick={() => handleAddCoin("gp", -5)}
-                className="w-7 h-7 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 text-gray-300 rounded-lg font-bold text-xs"
+                className="w-8 h-8 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 active:scale-90 text-gray-300 rounded-xl font-bold text-xs touch-manipulation flex items-center justify-center transition-transform"
               >
                 -5
               </button>
               <button
                 onClick={() => handleAddCoin("gp", 5)}
-                className="w-7 h-7 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 text-gray-300 rounded-lg font-bold text-xs"
+                className="w-8 h-8 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 active:scale-90 text-gray-300 rounded-xl font-bold text-xs touch-manipulation flex items-center justify-center transition-transform"
               >
                 +5
               </button>
@@ -150,13 +150,13 @@ export default function InventoryTab({ char, onUpdateInventory, onUpdateCoins }:
             <div className="flex justify-center gap-2">
               <button
                 onClick={() => handleAddCoin("sp", -10)}
-                className="w-7 h-7 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 text-gray-300 rounded-lg font-bold text-xs"
+                className="w-8 h-8 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 active:scale-90 text-gray-300 rounded-xl font-bold text-xs touch-manipulation flex items-center justify-center transition-transform"
               >
                 -10
               </button>
               <button
                 onClick={() => handleAddCoin("sp", 10)}
-                className="w-7 h-7 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 text-gray-300 rounded-lg font-bold text-xs"
+                className="w-8 h-8 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 active:scale-90 text-gray-300 rounded-xl font-bold text-xs touch-manipulation flex items-center justify-center transition-transform"
               >
                 +10
               </button>
@@ -177,13 +177,13 @@ export default function InventoryTab({ char, onUpdateInventory, onUpdateCoins }:
             <div className="flex justify-center gap-2">
               <button
                 onClick={() => handleAddCoin("cp", -10)}
-                className="w-7 h-7 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 text-gray-300 rounded-lg font-bold text-xs"
+                className="w-8 h-8 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 active:scale-90 text-gray-300 rounded-xl font-bold text-xs touch-manipulation flex items-center justify-center transition-transform"
               >
                 -10
               </button>
               <button
                 onClick={() => handleAddCoin("cp", 10)}
-                className="w-7 h-7 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 text-gray-300 rounded-lg font-bold text-xs"
+                className="w-8 h-8 bg-fantasy-slate-800 hover:bg-fantasy-slate-750 active:scale-90 text-gray-300 rounded-xl font-bold text-xs touch-manipulation flex items-center justify-center transition-transform"
               >
                 +10
               </button>
@@ -218,8 +218,9 @@ export default function InventoryTab({ char, onUpdateInventory, onUpdateCoins }:
           />
         </div>
         {totalWeight >= carryCapacity && (
-          <p className="text-[10px] text-fantasy-crimson-light italic text-center font-bold">
-            ⚠️ SOBRECARREGADO: Movimento reduzido em 10ft!
+          <p className="text-[10px] text-fantasy-crimson-light italic text-center font-bold flex items-center justify-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+            SOBRECARREGADO: Movimento reduzido em 10 pés!
           </p>
         )}
       </div>
@@ -324,30 +325,30 @@ export default function InventoryTab({ char, onUpdateInventory, onUpdateCoins }:
         )}
 
         {/* Filters */}
-        <div className="flex gap-1 bg-fantasy-slate-900 p-1 rounded-xl">
+        <div className="flex gap-1.5 bg-fantasy-slate-900 p-1.5 rounded-2xl border border-fantasy-slate-800">
           <button
             onClick={() => setActiveFilter("all")}
-            className={`flex-1 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-              activeFilter === "all" ? "bg-red-950/40 border border-red-900/30 text-red-200 font-bold" : "text-gray-400"
+            className={`flex-1 py-2 text-xs rounded-xl font-medium transition-all min-h-[38px] touch-manipulation active:scale-[0.98] ${
+              activeFilter === "all" ? "bg-fantasy-crimson text-white font-bold shadow-md shadow-red-950/50 border border-red-400/40" : "text-stone-400 hover:text-stone-200"
             }`}
           >
             Tudo
           </button>
           <button
             onClick={() => setActiveFilter("equipped")}
-            className={`flex-1 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-              activeFilter === "equipped" ? "bg-red-950/40 border border-red-900/30 text-red-200 font-bold" : "text-gray-400"
+            className={`flex-1 py-2 text-xs rounded-xl font-medium transition-all min-h-[38px] touch-manipulation active:scale-[0.98] ${
+              activeFilter === "equipped" ? "bg-fantasy-crimson text-white font-bold shadow-md shadow-red-950/50 border border-red-400/40" : "text-stone-400 hover:text-stone-200"
             }`}
           >
             Equipados
           </button>
           <button
             onClick={() => setActiveFilter("magic")}
-            className={`flex-1 py-1.5 text-xs rounded-lg font-medium transition-colors ${
-              activeFilter === "magic" ? "bg-red-950/40 border border-red-900/30 text-red-200 font-bold" : "text-gray-400"
+            className={`flex-1 py-2 text-xs rounded-xl font-medium transition-all min-h-[38px] touch-manipulation active:scale-[0.98] ${
+              activeFilter === "magic" ? "bg-fantasy-crimson text-white font-bold shadow-md shadow-red-950/50 border border-red-400/40" : "text-stone-400 hover:text-stone-200"
             }`}
           >
-            Mágicos ✨
+            Mágicos
           </button>
         </div>
 
@@ -401,7 +402,7 @@ function InventoryListItem({ item, onUpdateQty, onToggleEquip, onDelete }: Inven
           {/* Equip shield icon or visual emblem */}
           <button
             onClick={() => onToggleEquip(item.id)}
-            className={`p-1.5 rounded-lg border transition-all ${
+            className={`p-2 rounded-xl border transition-all min-w-[38px] min-h-[38px] flex items-center justify-center touch-manipulation shrink-0 ${
               item.equipped
                 ? "bg-fantasy-crimson/15 text-fantasy-crimson-light border-fantasy-crimson/40"
                 : "bg-fantasy-slate-800 text-gray-500 border-transparent hover:text-gray-300"
@@ -409,9 +410,9 @@ function InventoryListItem({ item, onUpdateQty, onToggleEquip, onDelete }: Inven
             title={item.equipped ? "Desequipar" : "Equipar"}
           >
             {item.isMagical && !item.equipped ? (
-              <Gem className="w-3.5 h-3.5 text-fantasy-crimson-light" />
+              <Gem className="w-4 h-4 text-fantasy-crimson-light" />
             ) : (
-              <Shield className="w-3.5 h-3.5" />
+              <Shield className="w-4 h-4" />
             )}
           </button>
 
@@ -419,8 +420,9 @@ function InventoryListItem({ item, onUpdateQty, onToggleEquip, onDelete }: Inven
             <h5 className="font-semibold text-gray-100 font-display text-sm tracking-wide flex items-center gap-1.5 truncate">
               {item.name}
               {item.isMagical && (
-                <span className="text-[9px] font-mono font-bold text-red-300 bg-red-950/35 border border-red-900/35 px-1.5 py-0.2 rounded uppercase animate-pulse">
-                  Mágico ✨
+                <span className="text-[9px] font-mono font-bold text-red-300 bg-red-950/35 border border-red-900/35 px-1.5 py-0.5 rounded uppercase flex items-center gap-1">
+                  <Gem className="w-2.5 h-2.5 text-red-300" />
+                  Mágico
                 </span>
               )}
             </h5>
@@ -431,20 +433,22 @@ function InventoryListItem({ item, onUpdateQty, onToggleEquip, onDelete }: Inven
         </div>
 
         {/* Quantity and Actions controls */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center bg-fantasy-slate-800 border border-fantasy-slate-700 rounded-xl p-0.5 font-mono">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center bg-fantasy-slate-800 border border-fantasy-slate-700 rounded-xl p-0.5 font-mono min-h-[36px]">
             <button
               onClick={() => onUpdateQty(item.id, -1)}
-              className="px-2 py-0.5 text-gray-400 hover:text-white font-bold"
+              className="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-white font-bold text-sm rounded-lg active:bg-fantasy-slate-700 touch-manipulation active:scale-90"
+              aria-label="Diminuir"
             >
               -
             </button>
-            <span className="px-2 text-xs font-bold text-white min-w-4 text-center">
+            <span className="px-1.5 text-xs font-bold text-white min-w-[20px] text-center">
               {item.quantity}
             </span>
             <button
               onClick={() => onUpdateQty(item.id, 1)}
-              className="px-2 py-0.5 text-gray-400 hover:text-white font-bold"
+              className="w-7 h-7 flex items-center justify-center text-gray-300 hover:text-white font-bold text-sm rounded-lg active:bg-fantasy-slate-700 touch-manipulation active:scale-90"
+              aria-label="Aumentar"
             >
               +
             </button>
@@ -452,7 +456,7 @@ function InventoryListItem({ item, onUpdateQty, onToggleEquip, onDelete }: Inven
 
           <button
             onClick={() => onDelete(item.id)}
-            className="p-1.5 text-gray-500 hover:text-fantasy-crimson-light rounded-lg hover:bg-fantasy-crimson/10 transition-all"
+            className="p-2 text-gray-500 hover:text-fantasy-crimson-light rounded-xl hover:bg-fantasy-crimson/10 transition-all min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
             title="Deletar Item"
           >
             <Trash2 className="w-4 h-4" />
