@@ -4,11 +4,11 @@ export const defaultCharacterData: CharacterData = {
   name: "Percival \"O Triturador\"",
   title: "Paladino do Juramento da Vingança / Sangue",
   class: "Paladino",
-  level: 5,
-  xp: 6500,
+  level: 6,
+  xp: 14000,
   hp: {
-    max: 52,
-    current: 52,
+    max: 60,
+    current: 60,
     temp: 0
   },
   ac: 18, // Placa (18)
@@ -44,8 +44,8 @@ export const defaultCharacterData: CharacterData = {
     { name: "Furtividade", attributeShortName: "dex", proficient: false }
   ],
   layOnHands: {
-    max: 25,
-    current: 25
+    max: 30,
+    current: 30
   },
   divineSense: {
     max: 5, // 1 + CHA mod (4)
@@ -195,7 +195,7 @@ export const defaultCharacterData: CharacterData = {
       components: "V",
       duration: "Instantânea",
       description: "Uma corrente de energia curativa emana de você para recuperar até seis criaturas à sua escolha que você possa ver dentro do alcance. Cada alvo recupera 2d8 + 4 HP. Sem efeito em mortos-vivos ou constructos.",
-      prepared: true
+      prepared: false
     },
     {
       id: "s12",
@@ -207,7 +207,7 @@ export const defaultCharacterData: CharacterData = {
       components: "V, S, M (uma pitada de sal e duas moedas de cobre sobre os olhos)",
       duration: "10 dias",
       description: "Protege um cadáver contra decomposição e impede que se torne um morto-vivo. Estende o limite de tempo para magias de ressurreição.",
-      prepared: true
+      prepared: false
     },
     {
       id: "s13",
@@ -309,7 +309,7 @@ export const defaultCharacterData: CharacterData = {
       id: "f3",
       name: "Cura pelas Mãos (Lay on Hands)",
       source: "Classe - Paladino Nív 1",
-      description: "Você possui uma reserva de poder curativo (25 pontos) que se recarrega com descanso longo. Com uma ação, pode tocar uma criatura e aplicar pontos de vida da reserva, ou gastar 5 pontos para neutralizar uma doença ou veneno."
+      description: "Você possui uma reserva de poder curativo (30 pontos) que se recarrega com descanso longo. Com uma ação, pode tocar uma criatura e aplicar pontos de vida da reserva, ou gastar 5 pontos para neutralizar uma doença ou veneno."
     },
     {
       id: "f4",
@@ -350,8 +350,8 @@ export const defaultCharacterData: CharacterData = {
     {
       id: "f7",
       name: "Aura de Proteção (Aura of Protection)",
-      source: "Classe - Paladino Nív 6 (Quase lá!)",
-      description: "Você e aliados amigáveis dentro de 3 metros ganham um bônus igual ao seu modificador de Carisma (+4) em todas as jogadas de salvamento."
+      source: "Classe - Paladino Nív 6",
+      description: "Você e aliados amigáveis dentro de 3 metros (10 pés) ganham um bônus igual ao seu modificador de Carisma (+4) em todas as jogadas de salvamento. Você precisa estar consciente para conceder este bônus."
     }
   ],
   notes: "Percival é conhecido como 'O Triturador' e agora segue o Juramento da Vingança/Sangue. Possui um forte vínculo infernal com seu Pesadelo Sanguinário.",

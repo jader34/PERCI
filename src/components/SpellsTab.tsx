@@ -42,8 +42,8 @@ export default function SpellsTab({
   const spellSaveDc = 8 + profBonus + chaMod + devoutBonus; // 8 + 3 + 4 + 1 = 16
   const spellAttackBonus = profBonus + chaMod + devoutBonus; // 3 + 4 + 1 = +8
 
-  // Limit of prepared spells: Carisma mod (+4) + Metade do nível Paladino (5 / 2 = 2) = 6
-  const maxPrepared = chaMod + Math.floor(char.level / 2); // 4 + 2 = 6
+  // Limit of prepared spells: Carisma mod (+4) + Metade do nível Paladino (6 / 2 = 3) = 7
+  const maxPrepared = chaMod + Math.floor(char.level / 2); // 4 + 3 = 7
 
   // Check if a spell from master list is prepared and if it is an oath spell
   const getSpellStatus = (spellName: string) => {

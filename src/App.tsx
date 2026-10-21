@@ -37,13 +37,34 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
   if (!updated.bloodBlessing) {
     updated.bloodBlessing = { max: 1, current: 1 };
   }
-  if (updated.hp && updated.hp.max === 50) {
+
+  // Level 6 Upgrade
+  if (!updated.level || updated.level < 6) {
+    updated.level = 6;
+  }
+  if (!updated.xp || updated.xp < 14000) {
+    updated.xp = 14000;
+  }
+
+  // HP Max 60
+  if (updated.hp && (updated.hp.max < 60 || updated.hp.max === 50 || updated.hp.max === 52)) {
+    const diff = 60 - updated.hp.max;
     updated.hp = {
       ...updated.hp,
-      max: 52,
-      current: updated.hp.current === 50 ? 52 : Math.min(52, updated.hp.current + 2)
+      max: 60,
+      current: updated.hp.current === updated.hp.max ? 60 : Math.min(60, updated.hp.current + Math.max(0, diff))
     };
   }
+
+  // Lay on Hands: 30 points (5 * level 6)
+  if (!updated.layOnHands || updated.layOnHands.max < 30) {
+    const diffLoH = updated.layOnHands ? 30 - updated.layOnHands.max : 5;
+    updated.layOnHands = {
+      max: 30,
+      current: updated.layOnHands ? Math.min(30, updated.layOnHands.current + Math.max(0, diffLoH)) : 30
+    };
+  }
+
   const cdIndex = updated.features.findIndex((f) => f.name.toLowerCase().includes("canalizar divindade"));
   const cdFeat = defaultCharacterData.features.find((f) => f.id === "f8");
   if (cdIndex >= 0 && cdFeat) {
@@ -55,6 +76,33 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
   } else if (cdFeat) {
     updated.features = [...updated.features, cdFeat];
   }
+
+  // Aura of Protection Feature Upgrade (Level 6)
+  const auraFeat = defaultCharacterData.features.find((f) => f.id === "f7");
+  const auraIndex = updated.features.findIndex(
+    (f) => f.id === "f7" || f.name.toLowerCase().includes("aura de proteção") || f.name.toLowerCase().includes("aura of protection")
+  );
+  if (auraIndex >= 0 && auraFeat) {
+    updated.features[auraIndex] = {
+      ...updated.features[auraIndex],
+      name: auraFeat.name,
+      source: auraFeat.source,
+      description: auraFeat.description
+    };
+  } else if (auraFeat) {
+    updated.features.push(auraFeat);
+  }
+
+  // Lay on Hands Feature Description (30 points)
+  const lohIndex = updated.features.findIndex((f) => f.id === "f3" || f.name.toLowerCase().includes("cura pelas mãos"));
+  const lohFeat = defaultCharacterData.features.find((f) => f.id === "f3");
+  if (lohIndex >= 0 && lohFeat) {
+    updated.features[lohIndex] = {
+      ...updated.features[lohIndex],
+      description: lohFeat.description
+    };
+  }
+
   if (updated.inventory) {
     let itemUpdated = false;
     updated.inventory = updated.inventory.map((item) => {
@@ -139,9 +187,28 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
     if (newSpellsToAdd.length > 0) {
       updated.spells = [...updated.spells, ...newSpellsToAdd];
     }
+
+    // Limit prepared class spells to 7
+    const isOath = (name: string) =>
+      ["perdição", "bane", "marca do caçador", "hunter's mark", "passo nebuloso", "misty step", "imobilizar pessoa", "hold person"].some(
+        (o) => name.toLowerCase().includes(o)
+      );
+    const preparedClassSpells = updated.spells.filter((s) => s.prepared && !isOath(s.name));
+    if (preparedClassSpells.length > 7) {
+      // Unprepare non-core spells so that exactly 7 are prepared
+      updated.spells = updated.spells.map((s) => {
+        if ((s.name.toLowerCase().includes("oração") || s.name.toLowerCase().includes("repouso")) && !isOath(s.name)) {
+          return { ...s, prepared: false };
+        }
+        return s;
+      });
+    }
   }
   return updated;
 }
+
+const STORAGE_KEY_V6 = "percival_character_sheet_v6";
+const STORAGE_KEY_V5 = "percival_character_sheet_v5";
 
 export default function App() {
   const [characterData, setCharacterData] = useState<CharacterData>(ensureNewDataFields(defaultCharacterData));
@@ -153,24 +220,22 @@ export default function App() {
 
   // Firestore & LocalStorage Sync
   useEffect(() => {
-    // 1. Initial Load from LocalStorage
-    const cached = localStorage.getItem("percival_character_sheet_v5");
+    // 1. Initial Load from LocalStorage (with backward compatibility)
+    const cached = localStorage.getItem(STORAGE_KEY_V6) || localStorage.getItem(STORAGE_KEY_V5);
     let localData = defaultCharacterData;
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
-        if (parsed.level && parsed.level >= 5) {
-          localData = ensureNewDataFields(parsed);
-          setCharacterData(localData);
-        } else {
-          localStorage.setItem("percival_character_sheet_v5", JSON.stringify(defaultCharacterData));
-          setCharacterData(defaultCharacterData);
-        }
+        localData = ensureNewDataFields(parsed);
+        localStorage.setItem(STORAGE_KEY_V6, JSON.stringify(localData));
+        setCharacterData(localData);
       } catch (err) {
         console.error("Failed to parse cached character sheet. Using default.", err);
+        localStorage.setItem(STORAGE_KEY_V6, JSON.stringify(defaultCharacterData));
+        setCharacterData(defaultCharacterData);
       }
     } else {
-      localStorage.setItem("percival_character_sheet_v5", JSON.stringify(defaultCharacterData));
+      localStorage.setItem(STORAGE_KEY_V6, JSON.stringify(defaultCharacterData));
       setCharacterData(defaultCharacterData);
     }
 
@@ -182,17 +247,18 @@ export default function App() {
         (snap) => {
           if (snap.exists()) {
             const remoteData = snap.data() as CharacterData;
-            if (!remoteData.level || remoteData.level < 5) {
-              // Force upgrade remote DB to level 5 paladin
-              setDoc(docRef, defaultCharacterData);
-              setCharacterData(defaultCharacterData);
+            if (!remoteData.level || remoteData.level < 6) {
+              // Force upgrade remote DB to level 6 paladin
+              const upgraded = ensureNewDataFields(remoteData.level ? remoteData : defaultCharacterData);
+              setDoc(docRef, upgraded);
+              setCharacterData(upgraded);
             } else {
               setCharacterData(ensureNewDataFields(remoteData));
             }
           } else {
             // First boot: populate database with current data
             const currentData = cached ? JSON.parse(cached) : defaultCharacterData;
-            const uploadData = (currentData.level && currentData.level >= 5) ? ensureNewDataFields(currentData) : defaultCharacterData;
+            const uploadData = ensureNewDataFields(currentData);
             setDoc(docRef, uploadData);
           }
         },
@@ -208,7 +274,7 @@ export default function App() {
   const saveCharacterData = (updater: CharacterData | ((prev: CharacterData) => CharacterData)) => {
     setCharacterData((prev) => {
       const newData = typeof updater === "function" ? updater(prev) : updater;
-      localStorage.setItem("percival_character_sheet_v5", JSON.stringify(newData));
+      localStorage.setItem(STORAGE_KEY_V6, JSON.stringify(newData));
 
       if (isFirebaseConfigured && db) {
         setDoc(doc(db, "characters", "percival"), newData).catch((err) => {

@@ -39,6 +39,9 @@ export default function FeaturesTab({
     cha: getMod(char.attributes.cha.value)
   };
 
+  // Aura of Protection (Paladino Nív 6: +Mod de Carisma em TODAS as salvaguardas para Percival e aliados a 3m)
+  const auraBonus = char.level >= 6 ? Math.max(1, mods.cha) : 0;
+
   const handleAttributeChange = (key: keyof CharacterData["attributes"], amount: number) => {
     const attrs = { ...char.attributes };
     const val = attrs[key].value + amount;
@@ -146,16 +149,21 @@ export default function FeaturesTab({
                 <div
                   className={`my-1 py-1.5 px-2 border rounded-xl flex flex-col justify-center items-center w-full shadow-inner select-none transition-all ${
                     attr.proficient
-                      ? "bg-red-950/20 border-red-900/60"
+                      ? "bg-red-950/30 border-red-800/80 shadow-[0_0_10px_rgba(239,68,68,0.15)]"
                       : "bg-fantasy-slate-800 border-fantasy-slate-700/60"
                   }`}
                 >
                   <span className={`text-xl font-mono font-black ${attr.proficient ? "text-fantasy-crimson-light" : "text-white"}`}>
-                    {formatMod(modVal + (attr.proficient ? profBonus : 0))}
+                    {formatMod(modVal + (attr.proficient ? profBonus : 0) + auraBonus)}
                   </span>
                   <span className={`text-[9px] uppercase tracking-wider font-bold mt-0.5 ${attr.proficient ? "text-red-400" : "text-gray-400"}`}>
                     Salvaguarda
                   </span>
+                  {auraBonus > 0 && (
+                    <span className="text-[8px] font-mono text-amber-300 font-bold bg-amber-950/70 border border-amber-500/40 px-1 rounded mt-0.5" title={`Inclui +${auraBonus} da Aura de Proteção`}>
+                      +{auraBonus} Aura
+                    </span>
+                  )}
                 </div>
 
                 {/* Score value +/- controls or display */}
@@ -188,9 +196,17 @@ export default function FeaturesTab({
             );
           })}
         </div>
-        <p className="text-[10px] text-gray-500 italic text-center">
-          *Os modificadores em destaque já somam o bônus de proficiência correspondente em cada salvaguarda.
-        </p>
+        <div className="flex flex-col items-center gap-1.5 text-center pt-1 border-t border-fantasy-slate-755/60">
+          {auraBonus > 0 && (
+            <div className="inline-flex items-center gap-1.5 text-xs text-amber-300 font-mono font-bold bg-amber-950/50 border border-amber-500/40 px-3 py-1 rounded-xl shadow-sm">
+              <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>Aura de Proteção Ativa (+{auraBonus} em todas as salvaguardas suas e de aliados a 3m)</span>
+            </div>
+          )}
+          <p className="text-[10px] text-gray-400 italic">
+            *As salvaguardas já somam o bônus de atributo{auraBonus > 0 ? `, a Aura de Proteção (+${auraBonus})` : ""} e proficiência (+{profBonus} em Sabedoria e Carisma).
+          </p>
+        </div>
       </div>
 
       {/* SECTION 2: SKILLS LIST */}

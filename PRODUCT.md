@@ -7,7 +7,7 @@
 web
 
 ## Users
-- Jogador de D&D 5E pilotando o personagem Percival ("O Triturador"), Paladino nível 5 do Juramento de Sangue.
+- Jogador de D&D 5E pilotando o personagem Percival ("O Triturador"), Paladino nível 6 do Juramento de Sangue.
 - Cenário principal: uso em smartphones durante sessões de RPG de mesa (jogabilidade móvel, rápida e com uma mão).
 
 ## Product Purpose

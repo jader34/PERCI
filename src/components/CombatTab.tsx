@@ -338,6 +338,11 @@ export default function CombatTab({
 
           {/* Buffs Status Badges */}
           <div className="flex items-center gap-1.5 flex-wrap">
+            {char.level >= 6 && (
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 flex items-center gap-1 shadow-sm" title="Aura de Proteção: +4 em salvaguardas para você e aliados a até 3 metros">
+                <Shield className="w-3 h-3 text-amber-400" /> Aura de Proteção (+4)
+              </span>
+            )}
             {blessingActive && (
               <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-bold border border-red-400 animate-pulse flex items-center gap-1 shadow-sm">
                 <Droplets className="w-3 h-3" /> +4 Bênção Sangue
@@ -353,6 +358,64 @@ export default function CombatTab({
                 <Shield className="w-3 h-3 text-rose-400" /> +2 CA/DES Véu de Sangue
               </span>
             )}
+          </div>
+        </div>
+
+        {/* Live Saving Throws Quick Widget with Aura of Protection */}
+        <div className="bg-fantasy-slate-900/90 border border-red-900/30 rounded-2xl p-2.5 shadow-md space-y-1.5">
+          <div className="flex justify-between items-center px-0.5">
+            <span className="text-[9px] uppercase tracking-wider font-extrabold text-amber-300/90 font-mono flex items-center gap-1">
+              <Shield className="w-3 h-3 text-amber-400" />
+              Salvaguardas Rápidas
+            </span>
+            <span className="text-[8px] font-mono text-amber-300 bg-amber-950/80 border border-amber-800/50 px-1.5 py-0.5 rounded font-bold">
+              {char.level >= 6 ? "Aura de Proteção (+4 Ativa)" : "Nível 5"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-6 gap-1 text-center font-mono">
+            {/* FOR */}
+            <div className="bg-fantasy-slate-800/90 border border-fantasy-slate-700/60 rounded-xl py-1 px-0.5">
+              <span className="text-[8px] text-gray-400 font-bold block uppercase">FOR</span>
+              <span className="text-xs font-black text-white">
+                +{strMod + (char.attributes.str.proficient ? profBonus : 0) + (char.level >= 6 ? chaMod : 0)}
+              </span>
+            </div>
+            {/* DES */}
+            <div className={`border rounded-xl py-1 px-0.5 ${bloodVeilActive ? "bg-rose-950/70 border-rose-500/60" : "bg-fantasy-slate-800/90 border-fantasy-slate-700/60"}`}>
+              <span className="text-[8px] text-gray-400 font-bold block uppercase">DES</span>
+              <span className={`text-xs font-black ${bloodVeilActive ? "text-rose-300" : "text-white"}`}>
+                +{Math.floor((char.attributes.dex.value - 10) / 2) + (char.attributes.dex.proficient ? profBonus : 0) + (char.level >= 6 ? chaMod : 0) + (bloodVeilActive ? 2 : 0)}
+              </span>
+            </div>
+            {/* CON */}
+            <div className="bg-fantasy-slate-800/90 border border-fantasy-slate-700/60 rounded-xl py-1 px-0.5">
+              <span className="text-[8px] text-gray-400 font-bold block uppercase">CON</span>
+              <span className="text-xs font-black text-white">
+                +{Math.floor((char.attributes.con.value - 10) / 2) + (char.attributes.con.proficient ? profBonus : 0) + (char.level >= 6 ? chaMod : 0)}
+              </span>
+            </div>
+            {/* INT */}
+            <div className="bg-fantasy-slate-800/90 border border-fantasy-slate-700/60 rounded-xl py-1 px-0.5">
+              <span className="text-[8px] text-gray-400 font-bold block uppercase">INT</span>
+              <span className="text-xs font-black text-white">
+                +{Math.floor((char.attributes.int.value - 10) / 2) + (char.attributes.int.proficient ? profBonus : 0) + (char.level >= 6 ? chaMod : 0)}
+              </span>
+            </div>
+            {/* SAB (Prof) */}
+            <div className="bg-red-950/40 border border-red-900/60 rounded-xl py-1 px-0.5">
+              <span className="text-[8px] text-red-300 font-bold block uppercase">SAB*</span>
+              <span className="text-xs font-black text-fantasy-crimson-light">
+                +{Math.floor((char.attributes.wis.value - 10) / 2) + (char.attributes.wis.proficient ? profBonus : 0) + (char.level >= 6 ? chaMod : 0)}
+              </span>
+            </div>
+            {/* CAR (Prof) */}
+            <div className="bg-red-950/40 border border-red-900/60 rounded-xl py-1 px-0.5">
+              <span className="text-[8px] text-red-300 font-bold block uppercase">CAR*</span>
+              <span className="text-xs font-black text-fantasy-crimson-light">
+                +{chaMod + (char.attributes.cha.proficient ? profBonus : 0) + (char.level >= 6 ? chaMod : 0)}
+              </span>
+            </div>
           </div>
         </div>
       </div>
