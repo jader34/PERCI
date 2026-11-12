@@ -355,5 +355,6 @@ export const defaultCharacterData: CharacterData = {
     }
   ],
   notes: "Percival é conhecido como 'O Triturador' e agora segue o Juramento da Vingança/Sangue. Possui um forte vínculo infernal com seu Pesadelo Sanguinário.",
-  bloodVeilUsed: false
+  bloodVeilUsed: false,
+  mountHp: 19
 };

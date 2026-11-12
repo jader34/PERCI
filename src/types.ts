@@ -117,4 +117,5 @@ export interface CharacterData {
   devoutAmuletUsed?: boolean;
   bloodVeilUsed?: boolean;
   bloodVeilActive?: boolean;
+  mountHp?: number;
 }

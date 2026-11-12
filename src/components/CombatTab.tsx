@@ -20,6 +20,7 @@ import { CharacterData } from "../types";
 interface CombatTabProps {
   char: CharacterData;
   onUpdateHp: (current: number, temp: number) => void;
+  onUpdateMountHp?: (amount: number) => void;
   onUpdateResource: (key: "layOnHands" | "divineSense" | "channelDivinity" | "bloodBlessing", amount: number) => void;
   onOpenHpModal: () => void;
   onUseSpellSlot: (level: 1 | 2) => boolean;
@@ -31,6 +32,7 @@ interface CombatTabProps {
 export default function CombatTab({
   char,
   onUpdateHp,
+  onUpdateMountHp,
   onUpdateResource,
   onOpenHpModal,
   onUseSpellSlot,
@@ -49,7 +51,7 @@ export default function CombatTab({
   const [bloodVeilActive, setBloodVeilActive] = useState(false);
 
   // Steed (Mount) States
-  const [mountHp, setMountHp] = useState(19);
+  const mountHp = char.mountHp !== undefined ? char.mountHp : 19;
   const [mountHpValStr, setMountHpValStr] = useState("");
   const [showMountHpControls, setShowMountHpControls] = useState(false);
 
@@ -72,15 +74,27 @@ export default function CombatTab({
   const handleMountDamage = () => {
     const val = parseInt(mountHpValStr, 10);
     if (isNaN(val) || val <= 0) return;
-    setMountHp((prev) => Math.max(0, prev - val));
+    const newHp = Math.max(0, mountHp - val);
+    if (onUpdateMountHp) {
+      onUpdateMountHp(newHp);
+    }
     setMountHpValStr("");
   };
 
   const handleMountHeal = () => {
     const val = parseInt(mountHpValStr, 10);
     if (isNaN(val) || val <= 0) return;
-    setMountHp((prev) => Math.min(19, prev + val));
+    const newHp = Math.min(19, mountHp + val);
+    if (onUpdateMountHp) {
+      onUpdateMountHp(newHp);
+    }
     setMountHpValStr("");
+  };
+
+  const handleMountFullHeal = () => {
+    if (onUpdateMountHp) {
+      onUpdateMountHp(19);
+    }
   };
 
   // Feedback display helper
@@ -1096,13 +1110,24 @@ export default function CombatTab({
               <div className="p-3 bg-red-950/30 border border-red-900/60 rounded-xl space-y-2 animate-fadeIn">
                 <div className="flex items-center justify-between text-[11px] font-mono font-bold text-red-300">
                   <span>Modificar PV da Montaria ({mountHp} / 19 HP)</span>
-                  <button
-                    type="button"
-                    onClick={() => setShowMountHpControls(false)}
-                    className="text-gray-400 hover:text-white text-xs px-1"
-                  >
-                    Fechar
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {mountHp < 19 && (
+                      <button
+                        type="button"
+                        onClick={handleMountFullHeal}
+                        className="text-emerald-400 hover:text-emerald-300 text-xs underline font-normal cursor-pointer"
+                      >
+                        Restaurar (19)
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowMountHpControls(false)}
+                      className="text-gray-400 hover:text-white text-xs px-1 cursor-pointer"
+                    >
+                      Fechar
+                    </button>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <input

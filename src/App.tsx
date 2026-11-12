@@ -37,6 +37,9 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
   if (!updated.bloodBlessing) {
     updated.bloodBlessing = { max: 1, current: 1 };
   }
+  if (updated.mountHp === undefined || updated.mountHp === null) {
+    updated.mountHp = 19;
+  }
 
   // Level 6 Upgrade
   if (!updated.level || updated.level < 6) {
@@ -297,6 +300,13 @@ export default function App() {
     }));
   };
 
+  const handleUpdateMountHp = (amount: number) => {
+    saveCharacterData((prev) => ({
+      ...prev,
+      mountHp: Math.max(0, Math.min(19, amount))
+    }));
+  };
+
   const handleUpdateResource = (
     key: "layOnHands" | "divineSense" | "channelDivinity" | "bloodBlessing",
     amount: number
@@ -453,6 +463,9 @@ export default function App() {
     // 8. Recharge Manto do Véu de Sangue daily use
     updated.bloodVeilUsed = false;
 
+    // 9. Recharge Mount HP
+    updated.mountHp = 19;
+
     saveCharacterData(updated);
     setShowLongRestConfirm(false);
   };
@@ -523,6 +536,7 @@ export default function App() {
               <CombatTab
                 char={characterData}
                 onUpdateHp={handleUpdateHp}
+                onUpdateMountHp={handleUpdateMountHp}
                 onUpdateResource={handleUpdateResource}
                 onOpenHpModal={() => setIsHpModalOpen(true)}
                 onUseSpellSlot={handleUseSpellSlot}
