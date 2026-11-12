@@ -46,13 +46,13 @@ function ensureNewDataFields(data: CharacterData): CharacterData {
     updated.xp = 14000;
   }
 
-  // HP Max 60
-  if (updated.hp && (updated.hp.max < 60 || updated.hp.max === 50 || updated.hp.max === 52)) {
-    const diff = 60 - updated.hp.max;
+  // HP Max 64
+  if (updated.hp && (updated.hp.max < 64 || updated.hp.max === 60 || updated.hp.max === 50 || updated.hp.max === 52)) {
+    const diff = 64 - updated.hp.max;
     updated.hp = {
       ...updated.hp,
-      max: 60,
-      current: updated.hp.current === updated.hp.max ? 60 : Math.min(60, updated.hp.current + Math.max(0, diff))
+      max: 64,
+      current: updated.hp.current === updated.hp.max ? 64 : Math.min(64, updated.hp.current + Math.max(0, diff))
     };
   }
 
@@ -247,8 +247,8 @@ export default function App() {
         (snap) => {
           if (snap.exists()) {
             const remoteData = snap.data() as CharacterData;
-            if (!remoteData.level || remoteData.level < 6) {
-              // Force upgrade remote DB to level 6 paladin
+            if (!remoteData.level || remoteData.level < 6 || !remoteData.hp || remoteData.hp.max < 64) {
+              // Force upgrade remote DB to level 6 paladin with 64 HP
               const upgraded = ensureNewDataFields(remoteData.level ? remoteData : defaultCharacterData);
               setDoc(docRef, upgraded);
               setCharacterData(upgraded);
